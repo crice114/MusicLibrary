@@ -2,10 +2,6 @@ package model;
 
 import java.util.ArrayList;
 import java.io.BufferedReader;
-import java.io.File;  // imported
-import java.io.FileNotFoundException;  // imported
-import java.io.FileReader;  // imported
-import java.io.IOException;  // imported
 import java.lang.String;
 
 public class MusicStore {
@@ -44,26 +40,5 @@ public class MusicStore {
         playlists.add(playlist);
     }
 
-	
-	// MAIN to read files
-	public static void main(String[] args) throws IOException {
-		File folder = new File("./src/albums");
-		File[] listOfAlbums = folder.listFiles();
-		
-		for(int i = 0; i < listOfAlbums.length; i++) {
-			File albumTxt = listOfAlbums[i];
-			String fileName = albumTxt.getName();
-			BufferedReader br = new BufferedReader(new FileReader(albumTxt));
-			
-			String line = "";
-			while(((line = br.readLine()) != null) && (fileName != "albums.txt")) {
-				System.out.println(line);
-			}
-			System.out.println("ALBUM DONE\n");
-		}
-		
-	}
-	
-	
 
 }
