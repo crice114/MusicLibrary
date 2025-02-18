@@ -1,53 +1,47 @@
 package model;
 
 public class Song {
-	// INSTANCE VARIABLES
-	private String title;
-	private String artist;
-	private int rating;
-	private boolean favorite;
+	// INSTANCE VARIABLES -- set to final, to make song class immutable CR 2/17
+	private final String title;
+	private final String artist;
+	private final Rating rating;  //Added Rating class, so type is now Rating
+	private final boolean favorite;
 	
 	
-	// CONSTRUCTOR
-	public Song(String title, String artist) {
+	// CONSTRUCTOR -- add rating and favorite to the constructor to accomplish immutability. Rating is now its own class
+	public Song(String title, String artist, Rating rating, boolean favorite) {
 		this.title = title;
 		this.artist = artist;
-		this.rating = 0;
-		this.favorite = false;
+		this.rating = rating;
+		this.favorite = favorite;
 	}
 	
-	// SETTERS AND GETTERS
+	//  GETTERS  -- remove setters, not needed as they are declared in the constructor
 	public String getTitle() {
 		return title;
 	}
 	
-	public void setTitle(String title) {
-		this.title = title;
-	}
 	
 	public String getArtist() {
 		return artist;
 	}
 	
-	public void setArtist(String artist) {
-		this.artist = artist;
-	}
-	
-	public int getRating() {
+	//rating type is now Rating
+	public Rating getRating() {
 		return rating;
 	}
 	
-	public void setRating(int rating) {
-		this.rating = rating;
-	}
-	
+
 	public boolean isFavorite() {
 		return favorite;
 	}
 	
-	public void setFavorite(boolean favorite) {
-		this.favorite = favorite;
-	}
 	
+	// add a toString() override
+	@Override
+	public String toString() {
+	    return "Song: " + title + " by " + artist + " | Rating: " + rating + " | Favorite: " + (favorite ? "Yes" : "No");
+	}
+
 	
 }

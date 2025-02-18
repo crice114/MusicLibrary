@@ -15,6 +15,9 @@ public class LibraryModel {
 	public LibraryModel() {
 		this.albums = new ArrayList<Album>();
 		this.playlists = new ArrayList<Playlist>();
+		
+		// initialize songs CR 2/17
+		this.songs = new ArrayList<>();
 	}
 	
 	
