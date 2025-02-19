@@ -49,12 +49,15 @@ public class MusicStore {
 		File folder = new File("./src/albums");
 		File[] listOfAlbums = folder.listFiles();
 		
+		// for every file in the albums folder...
 		for(int i = 0; i < listOfAlbums.length; i++) {
 			File albumTxt = listOfAlbums[i];
 			String fileName = albumTxt.getName();
 			BufferedReader br = new BufferedReader(new FileReader(albumTxt));
 			
 			String line = "";
+			//int num = 0;
+			
 			while(((line = br.readLine()) != null) && (fileName != "albums.txt")) {
 				System.out.println(line);
 			}

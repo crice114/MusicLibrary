@@ -4,14 +4,16 @@ public class Song {
 	// INSTANCE VARIABLES -- set to final, to make song class immutable CR 2/17
 	private final String title;
 	private final String artist;
+	private final String album;
 	private final Rating rating;  //Added Rating class, so type is now Rating
 	private final boolean favorite;
 	
 	
 	// CONSTRUCTOR -- add rating and favorite to the constructor to accomplish immutability. Rating is now its own class
-	public Song(String title, String artist, Rating rating, boolean favorite) {
+	public Song(String title, String artist, String album, Rating rating, boolean favorite) {
 		this.title = title;
 		this.artist = artist;
+		this.album = album;
 		this.rating = rating;
 		this.favorite = favorite;
 	}
@@ -24,6 +26,10 @@ public class Song {
 	
 	public String getArtist() {
 		return artist;
+	}
+	
+	public String getAlbum() {
+		return album;
 	}
 	
 	//rating type is now Rating
@@ -40,7 +46,8 @@ public class Song {
 	// add a toString() override
 	@Override
 	public String toString() {
-	    return "Song: " + title + " by " + artist + " | Rating: " + rating + " | Favorite: " + (favorite ? "Yes" : "No");
+	    //return "Song: " + title + " by " + artist + " | Rating: " + rating + " | Favorite: " + (favorite ? "Yes" : "No");
+		return title + " by " + artist + " from the album " + album;
 	}
 
 	

@@ -5,16 +5,16 @@ import java.util.ArrayList;
 public class LibraryModel {
 	// INSTANCE VARIABLES
 	private MusicStore musicStore;
+	
+	private ArrayList<Song> songs;
+	//private ArrayList<Artist> artists;
 	private ArrayList<Album> albums;
 	private ArrayList<Playlist> playlists;
-	private ArrayList<Song> songs;
-	
-	
 	
 	// CONSTRUCTOR
 	public LibraryModel() {
-		this.albums = new ArrayList<Album>();
-		this.playlists = new ArrayList<Playlist>();
+		this.albums = new ArrayList<>();
+		this.playlists = new ArrayList<>();
 		
 		// initialize songs CR 2/17
 		this.songs = new ArrayList<>();
@@ -23,49 +23,84 @@ public class LibraryModel {
 	
 	// METHODS
 	
+	// SEARCH AND RETURN (can have more than one. that's why array)
+	
 	// return song given title
-	public Song getSongByTitle(String title) {
+	public ArrayList<String> getSongByTitle(String title) {
+		ArrayList<String> songsList = new ArrayList<String>();
 		for (Song s : songs) {
 			if (s.getTitle().equals(title)) {
-				return s;
+				songsList.add(s.toString());
 			}
 		}
-		return null;
+		
+		if (!songsList.isEmpty()) {
+			return songsList;
+		}
+		else {
+			songsList.add("Song is not available.");
+			return songsList;
+		}
 	}
 	
 	// return song given artist
-	public Song getSongByArtist(String artist) {
+	public ArrayList<String> getSongByArtist(String artist) {
+		ArrayList<String> songsList = new ArrayList<String>();
 		for (Song s : songs) {
 			if (s.getArtist().equals(artist)) {
-				return s;
+				songsList.add(s.toString());
 			}
 		}
-		return null;
+		
+		if (!songsList.isEmpty()) {
+			return songsList;
+		}
+		else {
+			songsList.add("Song is not available.");
+			return songsList;
+		}
 	}
 	
-	// return song given artist
-	public Album getAlbumByTitle(String title) {
+	// return album given title
+	public ArrayList<String> getAlbumByTitle(String title) {
+		ArrayList<String> albumsList = new ArrayList<String>();
 		for (Album a : albums) {
 			if (a.getTitle().equals(title)) {
-				return a;
+				albumsList.add(a.toString());
 			}
 		}
-		return null;
+		
+		if (!albumsList.isEmpty()) {
+			return albumsList;
+		}
+		else {
+			albumsList.add("Album is not available.");
+			return albumsList;
+		}
 	}
 	
-	// return song given artist
-	public Album getAlbumByArtist(String artist) {
+	// return album given artist
+	public ArrayList<String> getAlbumByArtist(String artist) {
+		ArrayList<String> albumsList = new ArrayList<String>();
 		for (Album a : albums) {
 			if (a.getArtist().equals(artist)) {
-				return a;
+				albumsList.add(a.toString());
 			}
 		}
-		return null;
+		
+		if (!albumsList.isEmpty()) {
+			return albumsList;
+		}
+		else {
+			albumsList.add("Album is not available.");
+			return albumsList;
+		}
 	}
 	
 	
-	
+	// GET ENTIRE LISTS
 	// SETTERS AND GETTERS
+	
 	public MusicStore getMusicStore() {
 		return musicStore;
 	}
@@ -74,21 +109,42 @@ public class LibraryModel {
 		this.musicStore = musicStore;
 	}
 	
+	
+	
 	public ArrayList<Album> getAlbums() {
-		return albums;
+		return new ArrayList<>(albums);
 	}
 	
 	public void setAlbums(ArrayList<Album> albums) {
 		this.albums = albums;
 	}
 	
+	
 	public ArrayList<Playlist> getPlaylists() {
-		return playlists;
+		return new ArrayList<>(playlists);
 	}
 	
 	public void setPlaylists(ArrayList<Playlist> playlists) {
 		this.playlists = playlists;
 	}
+	
+	
+	public ArrayList<Song> getSongs() {
+		return new ArrayList<>(songs);
+	}
+	
+	public void setSongs(ArrayList<Song> songs) {
+		this.songs = songs;
+	}
+	
+	
+	/*public ArrayList<Artist> getArtists() {
+		return new ArrayList<>(artists);
+	}
+	
+	public void setArtists(ArrayList<Playlist> artists) {
+		this.artists = artists;
+	}*/
 	
 }
 
