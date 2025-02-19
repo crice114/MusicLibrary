@@ -41,5 +41,12 @@ public class Album {
 	public void addSong(Song song) {
 		songs.add(song);
 	}
+	
+	// add a toString() override
+	@Override
+	public String toString() {
+	    //return "Song: " + title + " by " + artist + " | Rating: " + rating + " | Favorite: " + (favorite ? "Yes" : "No");
+		return title + " by " + artist + "\nGenre: " + genre + " from " + yearReleased;
+	}
 
 }

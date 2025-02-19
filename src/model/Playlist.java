@@ -7,7 +7,7 @@ public class Playlist {
 	private ArrayList<Song> songs;
 	
 	public Playlist(String name) {
-		this.name = name;
+		this.setName(name);
 		this.songs = new ArrayList<>();
 	}
 	
@@ -22,6 +22,16 @@ public class Playlist {
 	
 	public void removeSong(Song song) {
 		songs.remove(song);
+	}
+
+
+	public String getName() {
+		return name;
+	}
+
+
+	public void setName(String name) {
+		this.name = name;
 	}
 
 }
