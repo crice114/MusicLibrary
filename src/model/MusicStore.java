@@ -59,6 +59,9 @@ public class MusicStore {
 				System.out.println(line);
 			}
 			System.out.println("ALBUM DONE\n");
+			
+			//close the BufferedReader after use
+			br.close();
 		}
 		
 	}
