@@ -7,23 +7,24 @@ public class LibraryModel {
 	private MusicStore musicStore;
 	
 	private ArrayList<Song> songs;
-	//private ArrayList<Artist> artists;
+	private ArrayList<Artist> artists;
 	private ArrayList<Album> albums;
 	private ArrayList<Playlist> playlists;
 	
 	// CONSTRUCTOR
 	public LibraryModel() {
-		this.albums = new ArrayList<>();
-		this.playlists = new ArrayList<>();
-		
+		this.albums = new ArrayList<Album>();
+		this.playlists = new ArrayList<Playlist>();
+		this.artists = new ArrayList<Artist>();
 		// initialize songs CR 2/17
-		this.songs = new ArrayList<>();
+		this.songs = new ArrayList<Song>();
 	}
 	
 	
 	// METHODS
 	
 	// SEARCH AND RETURN (can have more than one. that's why array)
+	// Also prints all results
 	
 	// return song given title
 	public ArrayList<String> getSongByTitle(String title) {
@@ -95,8 +96,7 @@ public class LibraryModel {
 			albumsList.add("Album is not available.");
 			return albumsList;
 		}
-	}
-	
+	}	
 	
 	// GET ENTIRE LISTS
 	// SETTERS AND GETTERS
@@ -115,34 +115,36 @@ public class LibraryModel {
 		return new ArrayList<>(albums);
 	}
 	
-	public void setAlbums(ArrayList<Album> albums) {
+	/*public void setAlbums(ArrayList<Album> albums) {
 		this.albums = albums;
-	}
+	}*/
+	
+	
 	
 	
 	public ArrayList<Playlist> getPlaylists() {
 		return new ArrayList<>(playlists);
 	}
 	
-	public void setPlaylists(ArrayList<Playlist> playlists) {
+	/*public void setPlaylists(ArrayList<Playlist> playlists) {
 		this.playlists = playlists;
-	}
+	}*/
 	
 	
 	public ArrayList<Song> getSongs() {
 		return new ArrayList<>(songs);
 	}
 	
-	public void setSongs(ArrayList<Song> songs) {
+	/*public void setSongs(ArrayList<Song> songs) {
 		this.songs = songs;
-	}
+	}*/
 	
 	
-	/*public ArrayList<Artist> getArtists() {
+	public ArrayList<Artist> getArtists() {
 		return new ArrayList<>(artists);
 	}
 	
-	public void setArtists(ArrayList<Playlist> artists) {
+	/*public void setArtists(ArrayList<Playlist> artists) {
 		this.artists = artists;
 	}*/
 	

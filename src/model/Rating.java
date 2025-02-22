@@ -1,4 +1,4 @@
-package model;
+/*package model;
 
 
 public class Rating {
@@ -30,4 +30,4 @@ public class Rating {
     public String toString() {
         return "Rating: " + rating + "/5";
     }
-}
+}*/
