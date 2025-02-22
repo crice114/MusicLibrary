@@ -46,25 +46,40 @@ public class MusicStore {
 
 	// MAIN to read files
 	public static void main(String[] args) throws IOException {
-		File folder = new File("./src/albums");
-		File[] listOfAlbums = folder.listFiles();
+		String albumsTxtPath = "./src/albums/albums.txt";
+		BufferedReader br = new BufferedReader(new FileReader(albumsTxtPath));
 		
-		// for every file in the albums folder...
-		for(int i = 0; i < listOfAlbums.length; i++) {
-			File albumTxt = listOfAlbums[i];
-			String fileName = albumTxt.getName();
-			BufferedReader br = new BufferedReader(new FileReader(albumTxt));
+		String line = "";
+		
+		while((line = br.readLine()) != null) {
+			String[] titleAlbum = line.split(",");
+			String albumTxt = titleAlbum[0] + "_" + titleAlbum[1];
+			System.out.println(albumTxt);
 			
-			String line = "";
-			//int num = 0;
+			File album = new File("./src/albums/"+albumTxt+".txt");
 			
-			while(((line = br.readLine()) != null) && (fileName != "albums.txt")) {
-				System.out.println(line);
+			if(album.exists()) {
+				String line2 = "";
+				BufferedReader br2 = new BufferedReader(new FileReader(album));
+				
+				line2 = br2.readLine();
+				
+				String[] albumInfo = line2.split(",");
+				System.out.println("TITLE: " + albumInfo[0]);
+				System.out.println("ARTIST: " + albumInfo[1]);
+				System.out.println("GENRE: " + albumInfo[2]);
+				System.out.println("YEAR: " + albumInfo[3]);
+				System.out.println("Songs:");
+				
+				while((line2 = br2.readLine()) != null) {
+					System.out.println(line2);
+				}
+				
+				System.out.print('\n');
+				
+				//br2.close();
 			}
-			System.out.println("ALBUM DONE\n");
-			
-			//close the BufferedReader after use
-			br.close();
+			//br.close();
 		}
 		
 	}

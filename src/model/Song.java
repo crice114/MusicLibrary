@@ -1,12 +1,26 @@
 package model;
 
+enum Rating {
+	ONE(1), TWO(2), THREE(3), FOUR(4), FIVE(5);
+	
+	private int stars;
+	
+	Rating(int stars) {
+		this.stars = stars;
+	}
+	
+	public int getStars() {
+		return stars;
+	}
+}
+
 public class Song {
 	// INSTANCE VARIABLES -- set to final, to make song class immutable CR 2/17
 	private final String title;
 	private final String artist;
 	private final String album;
-	private final Rating rating;  //Added Rating class, so type is now Rating
-	private final boolean favorite;
+	private Rating rating;  // Added Rating class, so type is now Rating
+	private boolean favorite;
 	
 	
 	// CONSTRUCTOR -- add rating and favorite to the constructor to accomplish immutability. Rating is now its own class
@@ -37,11 +51,17 @@ public class Song {
 		return rating;
 	}
 	
+	public void setRating(Rating rating) {
+		this.rating = rating;
+	}
 
 	public boolean isFavorite() {
 		return favorite;
 	}
-	
+
+	public void setFavorite(boolean favorite) {
+		this.favorite = favorite;
+	}
 	
 	// add a toString() override
 	@Override

@@ -45,8 +45,8 @@ public class Album {
 	// add a toString() override
 	@Override
 	public String toString() {
-	    //return "Song: " + title + " by " + artist + " | Rating: " + rating + " | Favorite: " + (favorite ? "Yes" : "No");
-		return title + " by " + artist + "\nGenre: " + genre + " from " + yearReleased;
+	    //return "Song: " + title + " by " + artist + " Genre + "from" + year + songs;
+		return title + " by " + artist + "\nGenre: " + genre + " from " + yearReleased + "\n" + songs;
 	}
 
 }
