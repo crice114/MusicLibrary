@@ -1,10 +1,13 @@
 package view;
 
 import model.LibraryModel;
+import model.MusicStore;
 import model.Song;
 import model.Album;
 import model.Playlist;
 import model.Rating;
+
+import java.io.IOException;
 import java.util.List;
 import java.util.Scanner;
 
@@ -21,6 +24,7 @@ import java.util.Scanner;
  * - Calls methods from **LibraryModel** to retrieve and modify data.
  * - Displays **formatted results** to the user.
  */
+
 public class LibraryView {
     private final LibraryModel model;
     private final Scanner scanner;
@@ -198,10 +202,14 @@ public class LibraryView {
 
     /**
      * Main method to run the text-based UI.
+     * @throws IOException 
      */
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         LibraryModel model = new LibraryModel();
         LibraryView view = new LibraryView(model);
+        
+        model.loadAlbums();
+        
         view.start();
     }
 }

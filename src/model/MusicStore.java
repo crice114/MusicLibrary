@@ -67,10 +67,10 @@ public class MusicStore {
                 // Read song titles
                 String songTitle;
                 while ((songTitle = br2.readLine()) != null) {
-                    Song song = new Song(songTitle, album.getArtist(), album.getTitle(), Rating.THREE, false); //default rating to 3
+                    Song song = new Song(songTitle, album.getArtist(), album.getTitle(), Rating.ZERO, false); //default rating to 3
                     songs.add(song);
                     album.addSong(song);
-                    System.out.println("  ➜ Added song: " + songTitle);
+                    System.out.println("➜ Added song: " + songTitle);
                 }
                 br2.close();
             }
@@ -79,7 +79,7 @@ public class MusicStore {
     }
 
     
-    public static void main(String[] args) throws IOException {
+    /*public static void main(String[] args) throws IOException {
         MusicStore store = new MusicStore();
         store.loadAlbums();
 
@@ -87,7 +87,7 @@ public class MusicStore {
         for (Song song : store.getSongs()) {
             System.out.println(song);
         }
-    }
+    }*/
 }
 
 
