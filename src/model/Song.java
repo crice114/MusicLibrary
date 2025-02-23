@@ -22,20 +22,30 @@ public final class Song {
 
     // GETTERS
     public String getTitle() {
-    	return title; }
+    	return title;
+    }
+    
     public String getArtist() {
-    	return artist; }
+    	return artist;
+    }
+    
     public String getAlbum() { 
-    	return album; }
+    	return album; 
+    }
+    
     public Rating getRating() {
-    	return rating; }
+    	return rating; 
+    }
+    
     public boolean isFavorite() {
-    	return favorite; }
+    	return favorite;
+    }
 
     // Instead of modifying, return a new Song instance with updated values. should maintain encapsulation
     public Song changeRating(Rating newRating) {
         return new Song(this.title, this.artist, this.album, newRating, this.favorite);
     }
+    
     //same idea for encapsulation here
     public Song markFavorite(boolean isFavorite) {
         return new Song(this.title, this.artist, this.album, this.rating, isFavorite);

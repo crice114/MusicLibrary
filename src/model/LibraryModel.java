@@ -1,11 +1,10 @@
 package model;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class LibraryModel {
 	// INSTANCE VARIABLES
-	private MusicStore musicStore;
-	
 	private ArrayList<Song> songs;
 	private ArrayList<Artist> artists;
 	private ArrayList<Album> albums;
@@ -101,13 +100,13 @@ public class LibraryModel {
 	// GET ENTIRE LISTS
 	// SETTERS AND GETTERS
 	
-	public MusicStore getMusicStore() {
+	/*public MusicStore getMusicStore() {
 		return musicStore;
 	}
 	
 	public void setMusicStore(MusicStore musicStore) {
 		this.musicStore = musicStore;
-	}
+	}*/
 	
 	
 	
@@ -147,6 +146,17 @@ public class LibraryModel {
 	/*public void setArtists(ArrayList<Playlist> artists) {
 		this.artists = artists;
 	}*/
+	
+	
+	public void loadAlbums() throws IOException {
+		MusicStore musicStore = new MusicStore();
+		
+		musicStore.loadAlbums();
+		
+		// could use a setter, but idk about encapsulation?
+		songs = musicStore.getSongs();
+		albums = musicStore.getAlbums();
+	}
 	
 }
 
