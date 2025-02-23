@@ -1,4 +1,72 @@
+
 package model;
+
+/**
+ * Represents an immutable Song in the Music Library.
+ * Uses the `Rating` enum to ensure valid ratings.
+ */
+public final class Song {
+    private final String title;
+    private final String artist;
+    private final String album;
+    private final Rating rating;  // ✅ Now using an enum (immutable)
+    private final boolean favorite;
+
+    public Song(String title, String artist, String album, Rating rating, boolean favorite) {
+        this.title = title;
+        this.artist = artist;
+        this.album = album;
+        this.rating = rating;
+        this.favorite = favorite;
+    }
+
+    // GETTERS
+    public String getTitle() {
+    	return title; }
+    public String getArtist() {
+    	return artist; }
+    public String getAlbum() { 
+    	return album; }
+    public Rating getRating() {
+    	return rating; }
+    public boolean isFavorite() {
+    	return favorite; }
+
+    // Instead of modifying, return a new Song instance with updated values. should maintain encapsulation
+    public Song changeRating(Rating newRating) {
+        return new Song(this.title, this.artist, this.album, newRating, this.favorite);
+    }
+    //same idea for encapsulation here
+    public Song markFavorite(boolean isFavorite) {
+        return new Song(this.title, this.artist, this.album, this.rating, isFavorite);
+    }
+
+    @Override
+    public String toString() {
+        return title + " by " + artist + " from the album " + album + " | " + rating;
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*package model;
 
 enum Rating {
 	ONE(1), TWO(2), THREE(3), FOUR(4), FIVE(5);
@@ -71,4 +139,4 @@ public class Song {
 	}
 
 	
-}
+}*/
