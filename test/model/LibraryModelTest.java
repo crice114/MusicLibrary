@@ -4,10 +4,10 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
 
 class LibraryModelTest {
-
+    LibraryModel library = new LibraryModel();
+	
     @Test
     void testLibraryInitialization() {
-        LibraryModel library = new LibraryModel();
         assertNotNull(library.getAlbums());
         assertNotNull(library.getSongs());
         assertNotNull(library.getArtists());
@@ -16,7 +16,6 @@ class LibraryModelTest {
 
     @Test
     void testAddingSongsToLibrary() {
-        LibraryModel library = new LibraryModel();
         Song song = new Song("Wonderwall", "Oasis", "Morning Glory", Rating.FOUR, false);
 
         library.getSongs().add(song);

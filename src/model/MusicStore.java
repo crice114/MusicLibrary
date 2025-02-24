@@ -67,7 +67,7 @@ public class MusicStore {
                 // Read song titles
                 String songTitle;
                 while ((songTitle = br2.readLine()) != null) {
-                    Song song = new Song(songTitle, album.getArtist(), album.getTitle(), Rating.ZERO, false); //default rating to 3
+                    Song song = new Song(songTitle, album.getArtist(), album.getTitle(), Rating.THREE, false); //default rating to 3
                     songs.add(song);
                     album.addSong(song);
                     System.out.println("➜ Added song: " + songTitle);
