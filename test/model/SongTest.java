@@ -1,14 +1,15 @@
+// 100% coverage
+
 package model;
 
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
 
 class SongTest {
+    Song song1 = new Song("Imagine", "John Lennon", "Imagine", Rating.THREE, false);
 
     @Test
     void testImmutability() {
-        Song song1 = new Song("Imagine", "John Lennon", "Imagine", Rating.THREE, false);
-
         // Ensure initial values are correct
         assertEquals("Imagine", song1.getTitle());
         assertEquals("John Lennon", song1.getArtist());
@@ -32,4 +33,10 @@ class SongTest {
         assertEquals(Rating.FIVE, song3.getRating());
         assertTrue(song3.isFavorite());
     }
+    
+    @Test
+	void testToString() {
+		String str = "Imagine by John Lennon from the album Imagine | Rating: 3/5";
+		assertEquals(str, song1.toString());
+	}
 }

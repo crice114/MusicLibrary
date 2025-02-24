@@ -15,7 +15,7 @@ public enum Rating {
 
     @Override
     public String toString() {
-        return "Rating: " + stars + "/5";
+        return "Rating: " + String.valueOf(stars) + "/5";
     }
 }
 
