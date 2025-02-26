@@ -24,4 +24,8 @@ public class Artist {
 	public ArrayList<Album> getAlbums() {
 		return albums;
 	}
+	
+	public void addAlbum(Album album) {
+		albums.add(album);
+	}
 }

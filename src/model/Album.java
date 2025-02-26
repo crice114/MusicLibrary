@@ -46,7 +46,19 @@ public class Album {
 	@Override
 	public String toString() {
 	    //return "Song: " + title + " by " + artist + " Genre + "from" + year;
-		return title + " by " + artist + "\nGenre: " + genre + " from " + String.valueOf(yearReleased);
+		// Songs through an array to print properly
+		
+		ArrayList<String> songsList = new ArrayList<String>();
+		int count = 1;
+		for (Song s : songs) {
+			songsList.add(count + ". " + s.getTitle());
+			count++;
+		}
+		
+		String songsStr = String.join("\n", songsList);
+		
+		return "\"" + title + "\"\n" + "Artist: " + artist + "\nGenre: " + genre +
+				"\nYear: " + String.valueOf(yearReleased) + "\n" + songsStr;
 	}
 
 }
