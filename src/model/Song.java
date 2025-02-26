@@ -53,7 +53,7 @@ public final class Song {
 
     @Override
     public String toString() {
-        return title + " by " + artist + " from the album " + album + " | " + rating;
+        return title + " - " + artist + " | " + album;
     }
 }
 

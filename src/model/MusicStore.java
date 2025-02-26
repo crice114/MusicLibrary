@@ -9,12 +9,14 @@ import java.io.IOException;
 public class MusicStore {
     private ArrayList<Song> songs;
     private ArrayList<Album> albums;
-    private ArrayList<Playlist> playlists;
+    //private ArrayList<Playlist> playlists;
+    private ArrayList<Artist> artists;
 
     public MusicStore() {
         this.songs = new ArrayList<>();
         this.albums = new ArrayList<>();
-        this.playlists = new ArrayList<>();
+        //this.playlists = new ArrayList<>();
+        this.artists = new ArrayList<>();
     }
 
     public ArrayList<Song> getSongs() {
@@ -25,8 +27,12 @@ public class MusicStore {
         return albums;
     }
 
-    public ArrayList<Playlist> getPlaylists() {
+    /*public ArrayList<Playlist> getPlaylists() {
         return playlists;
+    }*/
+    
+    public ArrayList<Artist> getArtists() {
+        return artists;
     }
 
     public void addSong(Song song) {
@@ -37,8 +43,12 @@ public class MusicStore {
         albums.add(album);
     }
 
-    public void addPlaylist(Playlist playlist) {
+    /*public void addPlaylist(Playlist playlist) {
         playlists.add(playlist);
+    }*/
+    
+    public void addArtist(Artist artist) {
+    	artists.add(artist);
     }
 
     /**
@@ -62,6 +72,26 @@ public class MusicStore {
                 Album album = new Album(albumInfo[0], albumInfo[1], albumInfo[2], Integer.parseInt(albumInfo[3]));
                 albums.add(album);
 
+                // Find or create new Artist object
+                boolean artistFound = false;
+                Artist artist = null;
+                
+                // Equals 
+                for (Artist a: artists) {
+                	if(a.getName().equals(albumInfo[1])) {
+                		artist = a;
+                		artistFound = true;
+                		break;
+                	}
+                }
+                
+                if(!artistFound) {
+                	artist = new Artist(albumInfo[1]);
+                	artists.add(artist);
+                }
+                
+                artist.addAlbum(album);
+
                 System.out.println("Loaded Album: " + album.getTitle());
 
                 // Read song titles
@@ -72,6 +102,7 @@ public class MusicStore {
                     album.addSong(song);
                     System.out.println("➜ Added song: " + songTitle);
                 }
+                
                 br2.close();
             }
         }

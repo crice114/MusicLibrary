@@ -1,3 +1,6 @@
+/* The view was coded using generative AI.
+ * Any use of self-created code will be mentioned.*/
+
 package view;
 
 import model.LibraryModel;
@@ -41,25 +44,29 @@ public class LibraryView {
     public void start() {
         while (true) {
             System.out.println("\n🎵 Welcome to Your Music Library 🎵");
-            System.out.println("1. Search for a song");
-            System.out.println("2. Search for an album");
-            System.out.println("3. View all songs in your library");
-            System.out.println("4. View all albums in your library");
-            System.out.println("5. Create a new playlist");
-            System.out.println("6. View all playlists");
-            System.out.println("7. Exit");
+            System.out.println("1. Add a song to library");
+            System.out.println("2. Add an album to library");
+            System.out.println("3. Search for a song");
+            System.out.println("4. Search for an album");
+            System.out.println("5. View all songs in your library");
+            System.out.println("6. View all albums in your library");
+            System.out.println("7. Create a new playlist");
+            System.out.println("8. View all playlists");
+            System.out.println("9. Exit");
             System.out.print("Enter your choice: ");
 
             int choice = getIntInput();
 
             switch (choice) {
-                case 1 -> searchSong();
-                case 2 -> searchAlbum();
-                case 3 -> displayLibrarySongs();
-                case 4 -> displayLibraryAlbums();
-                case 5 -> createPlaylist();
-                case 6 -> displayPlaylists();
-                case 7 -> {
+            	case 1 -> addSong();
+            	case 2 -> addAlbum();
+                case 3 -> searchSong();
+                case 4 -> searchAlbum();
+                case 5 -> displayLibrarySongs();
+                case 6 -> displayLibraryAlbums();
+                case 7 -> createPlaylist();
+                case 8 -> displayPlaylists();
+                case 9 -> {
                     System.out.println("\n👋 Thank you for using the Music Library!");
                     return;
                 }
@@ -68,13 +75,25 @@ public class LibraryView {
         }
     }
 
-    /**
+	private void addSong() {
+		System.out.print("\n🔍 Enter song title: ");
+		String title = scanner.nextLine();
+		List<String> results = model.getSongByTitleOrArtist(title);
+	}
+	
+	private Object addAlbum() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	/**
      * Searches for a song by title.
      */
     private void searchSong() {
-        System.out.print("\n🔍 Enter song title: ");
+        System.out.print("\n🔍 Enter song title or artist: ");
         String title = scanner.nextLine();
-        List<String> results = model.getSongByTitle(title);
+        List<String> results = model.getSongByTitleOrArtist(title);
+        //results.addAll(model.getSongByArtist(title));
 
         displaySearchResults(results, "song");
     }
@@ -83,9 +102,10 @@ public class LibraryView {
      * Searches for an album by title.
      */
     private void searchAlbum() {
-        System.out.print("\n🔍 Enter album title: ");
+        System.out.print("\n🔍 Enter album title or artist: ");
         String title = scanner.nextLine();
-        List<String> results = model.getAlbumByTitle(title);
+        List<String> results = model.getAlbumByTitleOrArtist(title);
+        //results.addAll(model.getAlbumByTitleOrArtist(title));
 
         displaySearchResults(results, "album");
     }
@@ -124,6 +144,7 @@ public class LibraryView {
         }
     }
 
+    // NOT KEEP (IT IS MANIPULATING DATA - MOVE TO MODEL)
     /**
      * Creates a new playlist and allows the user to add songs.
      */
@@ -153,6 +174,7 @@ public class LibraryView {
         System.out.println("🎵 Playlist '" + name + "' created successfully!");
     }
 
+    // KEEP
     /**
      * Displays all playlists in the user's library.
      */
@@ -170,6 +192,7 @@ public class LibraryView {
         }
     }
 
+    // KEEP
     /**
      * Utility method to handle integer input safely.
      * @return an integer input from the user
@@ -184,6 +207,7 @@ public class LibraryView {
         }
     }
 
+    // KEEP
     /**
      * Utility method to display search results.
      * @param results the list of search results
@@ -195,7 +219,7 @@ public class LibraryView {
         } else {
             System.out.println("\n🔎 Search Results:");
             for (String result : results) {
-                System.out.println("   ✅ " + result);
+                System.out.println("\n   ✅ " + result);
             }
         }
     }
