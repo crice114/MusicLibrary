@@ -50,6 +50,35 @@ public class MusicStore {
     public void addArtist(Artist artist) {
     	artists.add(artist);
     }
+    
+    //add the getSongByTittleOrArtist and getAlbumByTitleOrArtist to MusicStore, as according to the spec this is where to search for them
+ // ✅ Returns a list of songs matching a title or artist in the Music Store
+    public ArrayList<Song> getSongsByTitleOrArtist(String title) {
+        ArrayList<Song> results = new ArrayList<>();
+        for (Song s : songs) {
+            if (s.getTitle().equalsIgnoreCase(title) || s.getArtist().equalsIgnoreCase(title)) {
+                results.add(s);
+            }
+        }
+        return results;
+    }
+
+    // ✅ Returns a list of albums matching a title or artist in the Music Store
+    public ArrayList<Album> getAlbumsByTitleOrArtist(String title) {
+        ArrayList<Album> results = new ArrayList<>();
+        for (Album a : albums) {
+            if (a.getTitle().equalsIgnoreCase(title) || a.getArtist().equalsIgnoreCase(title)) {
+                results.add(a);
+            }
+        }
+        return results;
+    }
+
+    
+    
+    
+    
+    
 
     /**
      * Loads albums and songs from the `albums` folder. put into method loadAlbums, to separate from main.

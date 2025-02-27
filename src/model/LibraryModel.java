@@ -260,12 +260,12 @@ public class LibraryModel {
 				for (Song s : songs) {
 					if (s.getTitle().equalsIgnoreCase(song)) {
 						p.addSong(s);
-						System.out.println(s.getTitle() + "is now in playlist " + nameOfPlaylist);
+						System.out.println(s.getTitle() + " is now in playlist " + nameOfPlaylist);
 						return;
 					}
 				}
 				//if code gets here then song is not found
-				System.out.println("song not found");
+				System.out.println("Song not found in playlist");
 				return;
 			}
 		}
@@ -293,6 +293,17 @@ public class LibraryModel {
 	}
 	
 	
+	//add method to get a playlist. accounts for duplicate playlists of the same name
+	public Playlist getPlaylistByName(String name) {
+	    for (Playlist p : playlists) {
+	        if (p.getName().equalsIgnoreCase(name)) {
+	            return p;
+	        }
+	    }
+	    // Return null if no playlist is found
+	    return null;
+	}
+	
 	
 	
 	
@@ -305,7 +316,13 @@ public class LibraryModel {
 	            //replace the old song with the song that now has a rating
 	            songs.remove(s);
 	            songs.add(ratedSong);
-	            System.out.println("Song " + ratedSong + "rated.");
+	            System.out.println("Song " + ratedSong.getTitle() + "rated" + Rating.values()[rating].getStars() + " stars");
+	            
+	            //if rating is 5 stars, automatically set it to favorite.
+	            if(Rating.values()[rating] == Rating.FIVE) {
+	            	setToFavorite(title);
+	            	System.out.println(title + " has been added to favorites.");
+	            }
 	            return;
 	        }
 	    }
@@ -322,7 +339,7 @@ public class LibraryModel {
 				//replace old song with new version of song set as favorite
 				songs.remove(s);
 				songs.add(favoriteSong);
-				System.out.println("Song" + favoriteSong + "set to favorite.");
+				System.out.println("Song " + favoriteSong + " set to favorite.");
 				return;
 			}
 		}
@@ -353,7 +370,91 @@ public class LibraryModel {
 	public List<Artist> getArtists() {
 		//return new ArrayList<>(artists);
 		return Collections.unmodifiableList(artists);
+		
 	}
+	
+	
+	
+	// Add getters to return lists of artists, songs, albums, playlists(per spec)
+	// Returns a list of song titles in the library
+	public List<String> getSongTitles() {
+	    List<String> songTitles = new ArrayList<>();
+	    for (Song s : songs) {
+	        songTitles.add(s.getTitle());
+	    }
+	    return songTitles;
+	}
+	
+	
+	
+	
+	
+	
+
+	/*
+	// Returns a list of unique artist names in the library
+	public List<String> getArtistNames() {
+	    List<String> artistNames = new ArrayList<>();
+	    for (Artist a : artists) {
+	        artistNames.add(a.getName());
+	    }
+	    return artistNames;
+	}
+*/
+	public List<String> getArtistNames() {
+	    List<String> artistNames = new ArrayList<>();
+	    
+	    // Collect artists from songs
+	    for (Song s : songs) {
+	        if (!artistNames.contains(s.getArtist())) {
+	            artistNames.add(s.getArtist());
+	        }
+	    }
+	    
+	    // Collect artists from albums
+	    for (Album a : albums) {
+	        if (!artistNames.contains(a.getArtist())) {
+	            artistNames.add(a.getArtist());
+	        }
+	    }
+	    
+	    return artistNames;
+	}
+
+	
+	
+	
+	
+	
+	// Returns a list of album titles in the library
+	public List<String> getAlbumTitles() {
+	    List<String> albumTitles = new ArrayList<>();
+	    for (Album a : albums) {
+	        albumTitles.add(a.getTitle());
+	    }
+	    return albumTitles;
+	}
+
+	// Returns a list of playlist names in the library
+	public List<String> getPlaylistNames() {
+	    List<String> playlistNames = new ArrayList<>();
+	    for (Playlist p : playlists) {
+	        playlistNames.add(p.getName());
+	    }
+	    return playlistNames;
+	}
+
+	// Returns a list of favorite songs in the library
+	public List<Song> getFavoriteSongs() {
+	    List<Song> favoriteSongs = new ArrayList<>();
+	    for (Song s : songs) {
+	        if (s.isFavorite()) {
+	            favoriteSongs.add(s);
+	        }
+	    }
+	    return favoriteSongs;
+	}
+
 	
 	public void loadAlbums() throws IOException {
 		MusicStore musicStore = new MusicStore();
