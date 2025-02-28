@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
 
 class SongTest {
+	// Determined variables to avoid duplicated code
     Song song1 = new Song("Imagine", "John Lennon", "Imagine", Rating.THREE, false);
 
     @Test
@@ -18,8 +19,8 @@ class SongTest {
         assertFalse(song1.isFavorite());
 
         // Create new Song instances with modifications
-        Song song2 = song1.changeRating(Rating.FIVE);
-        Song song3 = song2.markFavorite(true);
+        Song song2 = song1.setRating(Rating.FIVE);
+        Song song3 = song2.setFavorite(true);
 
         // Ensure song1 remains unchanged
         assertEquals(Rating.THREE, song1.getRating());
@@ -34,9 +35,10 @@ class SongTest {
         assertTrue(song3.isFavorite());
     }
     
+    // Test toString
     @Test
 	void testToString() {
-		String str = "Imagine by John Lennon from the album Imagine | Rating: 3/5";
+		String str = "Imagine - John Lennon | Imagine";
 		assertEquals(str, song1.toString());
 	}
 }

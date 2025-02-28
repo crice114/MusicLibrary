@@ -1,15 +1,22 @@
+/* Album.java
+ * This Java file include the Album class.
+ * An Album object is made up of a title, artist,
+ * genre, year and a list of songs.
+ * */
+
 package model;
 
 import java.util.ArrayList;
 
 public class Album {
+	// INSTANCE VARIABLES
 	private String title;
 	private String artist;
 	private String genre;
 	private int yearReleased;
 	private ArrayList<Song> songs;
 	
-	// Album objects are meant to be immutable, so they are assigned in the constructor rather than with setters
+	// CONSTRUCTOR
 	public Album(String title, String artist, String genre, int yearReleased) {
 		this.title = title;
 		this.artist = artist;
@@ -18,6 +25,7 @@ public class Album {
 		this.songs = new ArrayList<Song>();
 	}
 
+	// GETTERS
 	public String getTitle() {
 		return title;
 	}
@@ -38,6 +46,7 @@ public class Album {
 		return songs;
 	}
 	
+	// ADD SONG
 	public void addSong(Song song) {
 		songs.add(song);
 	}
@@ -45,9 +54,7 @@ public class Album {
 	// add a toString() override
 	@Override
 	public String toString() {
-	    //return "Song: " + title + " by " + artist + " Genre + "from" + year;
-		// Songs through an array to print properly
-		
+		// Songs through an array to print properly and in order
 		ArrayList<String> songsList = new ArrayList<String>();
 		int count = 1;
 		for (Song s : songs) {
@@ -55,6 +62,7 @@ public class Album {
 			count++;
 		}
 		
+		// Newline per song
 		String songsStr = String.join("\n", songsList);
 		
 		return "\"" + title + "\"\n" + "Artist: " + artist + "\nGenre: " + genre +

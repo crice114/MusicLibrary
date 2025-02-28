@@ -1,37 +1,45 @@
+/* Playlist.java
+ * This Java file include the Playlist class.
+ * A Playlist object is made up of a name and songs.
+ * Since playlists are meant to be editable,
+ * this class is mutable. */
+
 package model;
 
 import java.util.ArrayList;
 
 public class Playlist {
+	// INSTANCE VARIABLES
 	private String name;
 	private ArrayList<Song> songs;
 	
+	// CONSTRUCTOR
 	public Playlist(String name) {
-		this.setName(name);
+		this.name = name;
 		this.songs = new ArrayList<>();
 	}
 	
-	
+	// GETTERS
 	public ArrayList<Song> getSongs() {
 		return songs;
 	}
 	
+	public String getName() {
+		return name;
+	}
+	
+	// SETTER
+	public void setName(String name) {
+		this.name = name;
+	}
+	
+	// ADD-REMOVE
 	public void addSong(Song song) {
 		songs.add(song);
 	}
 	
 	public void removeSong(Song song) {
 		songs.remove(song);
-	}
-
-
-	public String getName() {
-		return name;
-	}
-
-
-	public void setName(String name) {
-		this.name = name;
 	}
 
 }
