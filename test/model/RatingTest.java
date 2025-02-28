@@ -9,9 +9,9 @@ import org.junit.jupiter.api.Test;
 class RatingTest {
 	private final int NUM_RATINGS = 6;
 	
+	// Minimal testing
 	@Test
 	void testLength() {
 		assertEquals(NUM_RATINGS, Rating.values().length);
 	}
-
 }

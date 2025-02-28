@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
 
 class AlbumTest {
+	// Determined variables to avoid duplicated code
     Album album1 = new Album("Ten Percent", "Double Exposure", "Disco", 1976);
     Song song1 = new Song("Ten Percent", "Double Exposure", "Ten Percent", Rating.THREE, false);
     Song song2 = new Song("Gonna Give My Love Away", "Double Exposure", "Ten Percent", Rating.THREE, false);
@@ -27,11 +28,13 @@ class AlbumTest {
 	
 	@Test
 	void testGetSongs() {
+		// No added songs yet
 		assertEquals(0, album1.getSongs().size());
 	}
 	
 	@Test
 	void testAddSong() {
+		// Added songs
 		album1.addSong(song1);
 		album1.addSong(song2);
 		album1.addSong(song3);
@@ -44,8 +47,11 @@ class AlbumTest {
 	
 	@Test
 	void testToString() {
-		String str = "Ten Percent by Double Exposure\nGenre: Disco from 1976";
-		assertEquals(str, album1.toString());
+		// toString with one song
+		album1.addSong(song1);
+		String str = "\"Ten Percent\"\nArtist: Double Exposure\n"
+				+ "Genre: Disco\nYear: 1976\n1. Ten Percent";
+		assertEquals(str,album1.toString());		
 	}
 
 }
