@@ -1,5 +1,4 @@
-/* The view was coded using generative AI.
- * Any use of self-created code will be mentioned.*/
+/* The view was coded using generative AI. */
 
 /**
  * LibraryView.java
