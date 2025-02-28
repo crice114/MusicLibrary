@@ -76,7 +76,7 @@ public class LibraryModel {
 				return "Song " + song + " added to library";
 			}
 			else {
-				return "Duplicate song";
+				return "Duplicated song";
 			}
 		}
 		
@@ -121,7 +121,7 @@ public class LibraryModel {
 				return "Album " + album + "\nadded to library";
 			}
 			else {
-				return "Duplicate album";
+				return "Duplicated album";
 			}
 		}
 		
@@ -165,7 +165,7 @@ public class LibraryModel {
 				return "Song not found in playlist";
 			}
 		}
-		return "this playlist does not exist";
+		return "This playlist does not exist";
 	}
 	
 	// Remove song from playlist and return string result
@@ -175,12 +175,12 @@ public class LibraryModel {
 				for (Song s : p.getSongs()) {
 					if (s.getTitle().equalsIgnoreCase(song)) {
 						p.removeSong(s);
-						return "removed " + s.getTitle() + " from playlist";
+						return "Removed " + s.getTitle() + " from playlist";
 					}
 					
 				}
 				//if code gets here, song is not found
-				return "song is not in the playlist";
+				return "Song is not in the playlist";
 			}
 		}
 		return "No playlist exists by that name";
@@ -210,11 +210,11 @@ public class LibraryModel {
 	            // If rating is 5 stars, automatically set it to favorite.
 	            if(Rating.values()[rating] == Rating.FIVE) {
 	            	setToFavorite(title);
-	            	return "Song " + ratedSong.getTitle() + "rated" + Rating.values()[rating].getStars() + " stars and has been added to favorites.";
+	            	return ratedSong.getTitle() + " rated " + Rating.values()[rating].getStars() + "/5 stars and has been added to favorites.";
 	            }
 	           
 	           // Rate regular song (not favorite)
-	           return "Song " + ratedSong.getTitle() + "rated" + Rating.values()[rating].getStars() + " stars";
+	           return ratedSong.getTitle() + " rated " + Rating.values()[rating].getStars() + "/5 stars";
 	        }
 	    }
 	    // If code gets here the song is not in the library
@@ -230,7 +230,7 @@ public class LibraryModel {
 				// Replace old song with new version of song set as favorite
 				songs.remove(s);
 				songs.add(favoriteSong);
-				return "Song " + favoriteSong + " set to favorite.";
+				return favoriteSong + " set to favorite.";
 			}
 		}
 		return "Song not found.";

@@ -18,7 +18,7 @@ class AlbumTest {
     Song song7 = new Song("Pick Me", "Double Exposure", "Ten Percent", Rating.THREE, false);
 
 	@Test
-    void testImmutability() {
+    void testValues() {
         // Ensure initial values are correct
         assertEquals("Ten Percent", album1.getTitle());
         assertEquals("Double Exposure", album1.getArtist());

@@ -7,30 +7,30 @@ import org.junit.jupiter.api.Test;
 
 class SongTest {
 	// Determined variables to avoid duplicated code
-    Song song1 = new Song("Imagine", "John Lennon", "Imagine", Rating.THREE, false);
+    Song song1 = new Song("Sultans of Swing", "Dire Straits", "Dire Straits", Rating.ZERO, false);
 
     @Test
     void testImmutability() {
         // Ensure initial values are correct
-        assertEquals("Imagine", song1.getTitle());
-        assertEquals("John Lennon", song1.getArtist());
-        assertEquals("Imagine", song1.getAlbum());
-        assertEquals(Rating.THREE, song1.getRating());
+        assertEquals("Sultans of Swing", song1.getTitle());
+        assertEquals("Dire Straits", song1.getArtist());
+        assertEquals("Dire Straits", song1.getAlbum());
+        assertEquals(Rating.ZERO, song1.getRating());
         assertFalse(song1.isFavorite());
 
-        // Create new Song instances with modifications
+        // Create new Song with new rating
         Song song2 = song1.setRating(Rating.FIVE);
         Song song3 = song2.setFavorite(true);
 
         // Ensure song1 remains unchanged
-        assertEquals(Rating.THREE, song1.getRating());
+        assertEquals(Rating.ZERO, song1.getRating());
         assertFalse(song1.isFavorite());
 
-        // Ensure song2 has updated rating but same other attributes
+        // Ensure song2 has updated rating
         assertEquals(Rating.FIVE, song2.getRating());
         assertFalse(song2.isFavorite());
 
-        // Ensure song3 has updated favorite status but same rating
+        // Ensure song3 has updated favorite
         assertEquals(Rating.FIVE, song3.getRating());
         assertTrue(song3.isFavorite());
     }
@@ -38,7 +38,7 @@ class SongTest {
     // Test toString
     @Test
 	void testToString() {
-		String str = "Imagine - John Lennon | Imagine";
+		String str = "Sultans of Swing - Dire Straits | Dire Straits";
 		assertEquals(str, song1.toString());
 	}
 }

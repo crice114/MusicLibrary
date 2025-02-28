@@ -1,8 +1,7 @@
 /* Album.java
  * This Java file include the Album class.
  * An Album object is made up of a title, artist,
- * genre, year and a list of songs.
- * */
+ * genre, year and a list of songs. */
 
 package model;
 
