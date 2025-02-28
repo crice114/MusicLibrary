@@ -34,6 +34,7 @@ class PlaylistTest {
 	void testSetter() {
 		playlist1.addSong(song1);
 		playlist1.addSong(song2);
+		assertEquals(2, playlist1.getSongs().size());
 		playlist1.removeSong(song1);
 		assertEquals(1, playlist1.getSongs().size());
 	}
