@@ -127,7 +127,7 @@ public class LibraryModel {
 		
 		// If more than one album with same title, go back to ask for artist
 		else if (artist == null) {
-			return "Artist needed.";
+			return "Artist needed. More than one song with the same title.";
 		}
 		
 		// Get album-artist match
