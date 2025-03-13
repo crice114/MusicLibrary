@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.stream.Collectors;
@@ -24,7 +25,7 @@ public class LibraryModel {
 	private ArrayList<User> users;
 	private LinkedBlockingQueue<Song> recentSongs;
 		
-	// CONSTRUCTOR
+	// CONSTRUCTOR 
 	public LibraryModel() {
 		this.albums = new ArrayList<Album>();
 		this.artists = new ArrayList<Artist>();
@@ -415,6 +416,98 @@ public class LibraryModel {
 		return new ArrayList<>(recentSongs);
 	}
 
+	
+	///SORTING METHODS (bubblesort)
+	
+	//sort the songs alphabetically by title
+	public List<Song> getSortedSongsByTitle() {
+		List<Song> sortedByTitle = new ArrayList<>(songs);
+		int n = sortedByTitle.size();
+		
+		for(int i = 0; i < n-1; i++) {
+			for(int j = 0; j < n-i-1; j++) {
+				if (sortedByTitle.get(j).getTitle().compareToIgnoreCase(sortedByTitle.get(j+1).getTitle()) > 0) {
+					Song tempSong = sortedByTitle.get(j);
+					sortedByTitle.set(j, sortedByTitle.get(j+1));
+					sortedByTitle.set(j+1,  tempSong);
+				}
+			}
+		}
+		return sortedByTitle;
+	}
+	
+	//sort the songs alphabetically by artist
+		public List<Song> getSortedSongsByArtist() {
+			List<Song> sortedByArtist = new ArrayList<>(songs);
+			int n = sortedByArtist.size();
+			
+			for(int i = 0; i < n-1; i++) {
+				for(int j = 0; j < n-i-1; j++) {
+					if (sortedByArtist.get(j).getArtist().compareToIgnoreCase(sortedByArtist.get(j+1).getArtist()) > 0) {
+						Song tempSong = sortedByArtist.get(j);
+						sortedByArtist.set(j, sortedByArtist.get(j+1));
+						sortedByArtist.set(j+1,  tempSong);
+					}
+				}
+			}
+			return sortedByArtist;
+		}
+	
+		
+	//sort songs by rating in  ascending order
+		public List<Song> getSortedSongsByRating() {
+			List<Song> sortedByRating = new ArrayList<>(songs);
+			int n = sortedByRating.size();
+			
+			for (int i = 0; i < n - 1; i++) {
+	            for (int j = 0; j < n - i - 1; j++) {
+	                if (sortedByRating.get(j).getRating().getStars() > sortedByRating.get(j+1).getRating().getStars()) {
+	          
+	                    Song temp = sortedByRating.get(j);
+	                    sortedByRating.set(j, sortedByRating.get(j+1));
+	                    sortedByRating.set(j+1, temp);
+	                }
+	            }
+	        }
+	        return sortedByRating;
+			
+		}
+		
+		
+		//use iterator to shuffle songs
+	    public Iterator<Song> shuffleLibrary() {
+	        List<Song> shuffledList = new ArrayList<>(songs);
+	        Collections.shuffle(shuffledList);
+	        return shuffledList.iterator();
+	    }
+	    
+	    
+	 // Remove a song from the library
+	    public String removeSong(String title, String artist) {
+	        for (Song song : songs) {
+	            if (song.getTitle().equalsIgnoreCase(title) && song.getArtist().equalsIgnoreCase(artist)) {
+	                songs.remove(song);
+	                return "Removed the song " + title + " by " + artist;
+	            }
+	        }
+	        return "Song was not found";
+	    }
+
+	    // Remove an album from the library
+	    public String removeAlbum(String title, String artist) {
+	        for (Album album : albums) {
+	            if (album.getTitle().equalsIgnoreCase(title) && album.getArtist().equalsIgnoreCase(artist)) {
+	                albums.remove(album);
+	                return "Removed the album " + title + " by " + artist;
+	            }
+	        }
+	        return "Album was not found";
+	    }
+
+	
+	
+	
+	
 	// Load MusicStore info for use
 	public void loadAlbums() throws IOException {
 		MusicStore musicStore = new MusicStore();
