@@ -15,14 +15,18 @@ public final class Song {
     private final String album;
     private final Rating rating;  // enum (immutable)
     private final boolean favorite;
+    
+    private final int count;
 
     // CONSTRUCTOR
-    public Song(String title, String artist, String album, Rating rating, boolean favorite) {
+    public Song(String title, String artist, String album, Rating rating, boolean favorite, int count) {
         this.title = title;
         this.artist = artist;
         this.album = album;
         this.rating = rating;
         this.favorite = favorite;
+        
+        this.count = count;
     }
 
     // GETTERS
@@ -45,15 +49,24 @@ public final class Song {
     public boolean isFavorite() {
     	return favorite;
     }
+    
+    public int getCount() {
+    	return count;
+    }
 
     // Return a new Song instance with updated values (instead of changing previous one).
     public Song setRating(Rating newRating) {
-        return new Song(this.title, this.artist, this.album, newRating, this.favorite);
+        return new Song(this.title, this.artist, this.album, newRating, this.favorite, this.count);
     }
     
     // Similar concept. Both ensure encapsulation.
     public Song setFavorite(boolean isFavorite) {
-        return new Song(this.title, this.artist, this.album, this.rating, isFavorite);
+        return new Song(this.title, this.artist, this.album, this.rating, isFavorite, this.count);
+    }
+    
+    // Similar concept. ensure encapsulation.
+    public Song incrementCount() {
+        return new Song(this.title, this.artist, this.album, this.rating, this.favorite, this.count+1);
     }
 
     // Override toString returning title, artist and album
