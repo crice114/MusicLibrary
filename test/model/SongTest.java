@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 
 class SongTest {
 	// Determined variables to avoid duplicated code
-    Song song1 = new Song("Sultans of Swing", "Dire Straits", "Dire Straits", Rating.ZERO, false);
+    Song song1 = new Song("Sultans of Swing", "Dire Straits", "Dire Straits", Rating.ZERO, false, 0);
 
     @Test
     void testImmutability() {

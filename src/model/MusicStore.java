@@ -53,15 +53,31 @@ public class MusicStore {
     }
     
     // Add the getSongByTittleOrArtist and getAlbumByTitleOrArtist to MusicStore, as according to the spec this is where to search for them
-   public ArrayList<Song> getSongsByTitleOrArtist(String title) {
-       ArrayList<Song> results = new ArrayList<>();
-       for (Song s : songs) {
-           if (s.getTitle().equalsIgnoreCase(title) || s.getArtist().equalsIgnoreCase(title)) {
-               results.add(s);
-           }
-       }
-       return results;
-   }
+    public ArrayList<Song> getSongsByTitleOrArtist(String title) {
+    	ArrayList<Song> results = new ArrayList<>();
+    	for (Song s : songs) {
+    		if (s.getTitle().equalsIgnoreCase(title) || s.getArtist().equalsIgnoreCase(title)) {
+    			results.add(s);
+    			}
+    		}
+    	return results;
+    }
+    
+    public ArrayList<Song> getSongsByGenre(String genre) {
+    	ArrayList<Song> results = new ArrayList<>();
+    	for (Song s : songs) {
+    		String albumTitle = s.getAlbum();
+    		for (Album a : albums) {
+    			// Search for title AND genre
+    			if (a.getTitle().equalsIgnoreCase(albumTitle) && a.getGenre().equalsIgnoreCase(genre)) {
+    				results.add(s);
+    			}
+    		}
+    	}
+    	return results;
+    }
+   
+
 
    public ArrayList<Album> getAlbumsByTitleOrArtist(String title) {
        ArrayList<Album> results = new ArrayList<>();

@@ -114,22 +114,23 @@ public class LibraryView {
             System.out.println("4. Search for a song in our store");
             System.out.println("5. Search for an album in our store");
             System.out.println("6. Search by artist from our store");
-            System.out.println("7. Search for a playlist");
-            System.out.println("8. Create a new playlist");
-            System.out.println("9. Add song to playlist");
-            System.out.println("10. Remove song from playlist");
-            System.out.println("11. Rate a song");
-            System.out.println("12. Mark song as favorite");
-            System.out.println("13. View all songs");
-            System.out.println("14. View all artists");
-            System.out.println("15. View all albums");
-            System.out.println("16. View all playlists");
-            System.out.println("17. View favorite songs");
-            System.out.println("18. View recently played songs");
-            System.out.println("19. View frequently played songs");
-            System.out.println("20. Remove a song from library");
-            System.out.println("21. Remove an album from library");
-            System.out.println("22. Exit");
+            System.out.println("7. Search by genre from our store");
+            System.out.println("8. Search for a playlist");
+            System.out.println("9. Create a new playlist");
+            System.out.println("10. Add song to playlist");
+            System.out.println("11. Remove song from playlist");
+            System.out.println("12. Rate a song");
+            System.out.println("13. Mark song as favorite");
+            System.out.println("14. View all songs");
+            System.out.println("15. View all artists");
+            System.out.println("16. View all albums");
+            System.out.println("17. View all playlists");
+            System.out.println("18. View favorite songs");
+            System.out.println("19. View recently played songs");
+            System.out.println("20. View frequently played songs");
+            System.out.println("21. Remove a song from library");
+            System.out.println("22. Remove an album from library");
+            System.out.println("23. Exit");
 
             System.out.print("Enter your choice: ");
 
@@ -144,22 +145,23 @@ public class LibraryView {
                 case 4 -> searchSong();
                 case 5 -> searchAlbum();
                 case 6 -> searchByArtist();
-                case 7 -> searchPlaylist();
-                case 8 -> createPlaylist();
-                case 9 -> addSongToPlaylist();
-                case 10 -> removeSongFromPlaylist();
-                case 11 -> rateSong();
-                case 12 -> markSongAsFavorite();
-                case 13 -> listSongs();
-                case 14 -> listArtists();
-                case 15 -> listAlbums();
-                case 16 -> listPlaylists();
-                case 17 -> listFavoriteSongs();
-                case 18 -> displayRecentlyPlayedSongs();
-                case 19 -> displayFrequentlyPlayedSongs();
-                case 20 -> removeSong();  
-                case 21 -> removeAlbum();
-                case 22 -> {
+                case 7 -> searchByGenre();
+                case 8 -> searchPlaylist();
+                case 9 -> createPlaylist();
+                case 10 -> addSongToPlaylist();
+                case 11 -> removeSongFromPlaylist();
+                case 12 -> rateSong();
+                case 13 -> markSongAsFavorite();
+                case 14 -> listSongs();
+                case 15 -> listArtists();
+                case 16 -> listAlbums();
+                case 17 -> listPlaylists();
+                case 18 -> listFavoriteSongs();
+                case 19 -> displayRecentlyPlayedSongs();
+                case 20 -> displayFrequentlyPlayedSongs();
+                case 21 -> removeSong();  
+                case 22 -> removeAlbum();
+                case 23 -> {
                     System.out.println("\n👋 Thank you for using the Music Library!");
                     return;
                 }
@@ -273,7 +275,27 @@ public class LibraryView {
             }
         }
     }
+    
+ // #7 SEARCH BY GENRE
+    private void searchByGenre() {
+        System.out.print("\n🔍 Enter genre: ");
+        String genre = scanner.nextLine().trim(); // Get the genre input
 
+        List<Song> songResults = musicStore.getSongsByGenre(genre);
+
+        if (songResults.isEmpty()) {
+            System.out.println("❌ No results found for genre: " + genre);
+        } else {
+            System.out.println("\n🎤 Genre: " + genre);
+            // Output the song results
+            System.out.println("\n🎵 Songs:");
+            for (Song song : songResults) {
+                System.out.println("   🎶 " + song.getTitle() + " (from " + song.getAlbum() + ")");
+            }
+        }
+    }
+    
+    
     // #6 SEARCH PLAYLIST
     private void searchPlaylist() {
         System.out.print("\n📜 Enter playlist name: ");

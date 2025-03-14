@@ -9,8 +9,8 @@ import org.junit.jupiter.api.Test;
 class PlaylistTest {
 	// Determined variables to avoid duplicated code
 	Playlist playlist1 = new Playlist("Yacht Rock");
-    Song song1 = new Song("Reminiscing", "Little River Band", "Sleeper Catcher", Rating.ZERO, false);
-    Song song2 = new Song("These Chains", "Toto", "The Seventh One", Rating.ZERO, false);
+    Song song1 = new Song("Reminiscing", "Little River Band", "Sleeper Catcher", Rating.ZERO, false, 0);
+    Song song2 = new Song("These Chains", "Toto", "The Seventh One", Rating.ZERO, false, 0);
 	
     // Getters and Setters and Add
 	@Test
