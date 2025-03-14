@@ -12,4 +12,9 @@ public final class User {
 	public String getUsername() {
 		return username;
 	}
+	
+	//add a getPassword method
+	public String getPassword() {
+		return password;
+	}
 }

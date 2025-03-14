@@ -19,8 +19,10 @@ package view;
 import model.*;
 
 import java.io.IOException;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Scanner;
+
 
 public class LibraryView {
 	// VARIABLES
@@ -125,7 +127,10 @@ public class LibraryView {
             System.out.println("17. View favorite songs");
             System.out.println("18. View recently played songs");
             System.out.println("19. View frequently played songs");
-            System.out.println("20. Exit");
+            System.out.println("20. Remove a song from library");
+            System.out.println("21. Remove an album from library");
+            System.out.println("22. Exit");
+
             System.out.print("Enter your choice: ");
 
             // USER INPUT
@@ -152,7 +157,9 @@ public class LibraryView {
                 case 17 -> listFavoriteSongs();
                 case 18 -> displayRecentlyPlayedSongs();
                 case 19 -> displayFrequentlyPlayedSongs();
-                case 20 -> {
+                case 20 -> removeSong();  
+                case 21 -> removeAlbum();
+                case 22 -> {
                     System.out.println("\n👋 Thank you for using the Music Library!");
                     return;
                 }
@@ -444,6 +451,38 @@ public class LibraryView {
             }
         }
     }
+    private void shuffleLibrary() {
+        System.out.println("\n🔀 Shuffling your music library...");
+        Iterator<Song> shuffledSongs = model.shuffleLibrary();
+        while (shuffledSongs.hasNext()) {
+            System.out.println("🎵 " + shuffledSongs.next().getTitle());
+        }
+    }
+
+ // Remove a song from the library
+    private void removeSong() {
+        System.out.print("\n🗑️ Enter the song title to remove: ");
+        String title = scanner.nextLine();
+
+        System.out.print("🎤 Enter the artist name: ");
+        String artist = scanner.nextLine();
+
+        String result = model.removeSong(title, artist);
+        System.out.println(result);
+    }
+
+    // Remove an album from the library
+    private void removeAlbum() {
+        System.out.print("\n🗑️ Enter the album title to remove: ");
+        String title = scanner.nextLine();
+
+        System.out.print("🎤 Enter the artist name: ");
+        String artist = scanner.nextLine();
+
+        String result = model.removeAlbum(title, artist);
+        System.out.println(result);
+    }
+
 
     // MAIN
     public static void main(String[] args) throws IOException {

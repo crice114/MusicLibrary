@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -15,8 +16,15 @@ class LibraryModelTest {
     LibraryModel library;
 	MusicStore musicStore;
 	
-	Song song1 = new Song("These Chains", "Toto", "The Seventh One", Rating.ZERO, false);
-	Song song2 = new Song("Daydreamer", null, null, null, false);
+	//adding a 0 at the end of the song parameters to account for counts
+	Song song1 = new Song("These Chains", "Toto", "The Seventh One", Rating.ZERO, false,0);
+	Song song2 = new Song("Daydreamer", null, null, null, false, 0);
+	
+	//add songs to test the sorting methods
+    Song song3 = new Song("Jesus", "Amos Lee", "Mission Bell", Rating.THREE, false, 0);
+    Song song4 = new Song("Banjo", "Leonard Cohen", "Old Ideas", Rating.FIVE, false, 0);
+    Song song5 = new Song("Tapestry", "Carol King", "Tapestry", Rating.FOUR, false, 0);
+
 	
     Album album1 = new Album("The Seventh One", "Toto", "Rock", 1988);
     Album album2 = new Album("19", "Adele", null, 0);
@@ -30,6 +38,7 @@ class LibraryModelTest {
     	library = new LibraryModel();
     	musicStore.loadAlbums();
     	library.loadAlbums();
+    	
     }
     
     // Get song and album
@@ -248,5 +257,81 @@ class LibraryModelTest {
 		library.rateSong(song2.getTitle(), 5);
 		assertNotEquals(song2.getTitle(), library.getFavoriteSongs().get(0));
 	}
+	
+	
+	
+	
+	//test the sorting methods
+	@Test
+	void testSortingByTitle() {
+	    library.addSong(song3.getTitle(), musicStore, song3.getArtist());
+	    library.addSong(song4.getTitle(), musicStore, song4.getArtist());
+	    library.addSong(song5.getTitle(), musicStore, song5.getArtist());
+
+	    List<Song> sortedSongs = library.getSortedSongsByTitle();
+
+	    assertEquals(3, sortedSongs.size()); // Only 3 songs added
+	    assertEquals("Banjo", sortedSongs.get(0).getTitle());
+	    assertEquals("Jesus", sortedSongs.get(1).getTitle());
+	    assertEquals("Tapestry", sortedSongs.get(2).getTitle());
+	}
+
+	// Test sorting by artist
+	@Test
+	void testSortingByArtist() {
+	    library.addSong(song3.getTitle(), musicStore, song3.getArtist());
+	    library.addSong(song4.getTitle(), musicStore, song4.getArtist());
+	    library.addSong(song5.getTitle(), musicStore, song5.getArtist());
+
+	    List<Song> sortedSongs = library.getSortedSongsByArtist();
+
+	    assertEquals(3, sortedSongs.size()); // Only 3 songs added
+	    assertEquals("Amos Lee", sortedSongs.get(0).getArtist());
+	    assertEquals("Carol King", sortedSongs.get(1).getArtist());
+	    assertEquals("Leonard Cohen", sortedSongs.get(2).getArtist());
+	}
+
+	// Test sorting by rating
+	@Test
+	void testSortingByRating() {
+	    library.addSong(song3.getTitle(), musicStore, song3.getArtist());
+	    library.addSong(song4.getTitle(), musicStore, song4.getArtist());
+	    library.addSong(song5.getTitle(), musicStore, song5.getArtist());
+	    
+	    
+	    library.rateSong(song3.getTitle(), 3);
+	    library.rateSong(song4.getTitle(), 5);
+	    library.rateSong(song5.getTitle(), 4);
+
+	    List<Song> sortedSongs = library.getSortedSongsByRating();
+
+	    assertEquals(3, sortedSongs.size()); 
+	    assertEquals(3, sortedSongs.get(0).getRating().getStars()); 
+	    assertEquals(4, sortedSongs.get(1).getRating().getStars()); 
+	    assertEquals(5, sortedSongs.get(2).getRating().getStars()); 
+	}
+	
+	@Test
+	void testRemoveSong() {
+	    library.addSong(song3.getTitle(), musicStore, song3.getArtist());
+
+	    assertEquals(1, library.getSongs().size()); 
+	    library.removeSong(song3.getTitle(), song3.getArtist());
+	    assertEquals(0, library.getSongs().size()); 
+	}
+
+	@Test
+	void testRemoveAlbum() {
+	    library.addAlbum(album2.getTitle(), musicStore, album2.getArtist());
+
+	    assertEquals(1, library.getAlbums().size()); 
+	    library.removeAlbum(album2.getTitle(), album2.getArtist());
+	    assertEquals(0, library.getAlbums().size()); 
+	}
+
+	
+	
+	
+	
 	
 }

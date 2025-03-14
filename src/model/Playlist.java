@@ -7,6 +7,9 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
 
 public class Playlist {
 	// INSTANCE VARIABLES
@@ -41,5 +44,11 @@ public class Playlist {
 	public void removeSong(Song song) {
 		songs.remove(song);
 	}
+	
+	 public Iterator<Song> shufflePlaylist() {
+	        List<Song> shuffledSongs = new ArrayList<>(songs);
+	        Collections.shuffle(shuffledSongs);
+	        return shuffledSongs.iterator();
+	    }
 
 }

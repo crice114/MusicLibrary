@@ -120,7 +120,7 @@ public class MusicStore {
                 // Read song titles
                 String songTitle;
                 while ((songTitle = br2.readLine()) != null) {
-                    Song song = new Song(songTitle, album.getArtist(), album.getTitle(), Rating.ZERO, false);
+                    Song song = new Song(songTitle, album.getArtist(), album.getTitle(), Rating.ZERO, false, 0);    //// added a 0 in parameter for count
                     // Add song to songs and to that specific album
                     songs.add(song);
                     album.addSong(song);
