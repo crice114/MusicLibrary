@@ -13,7 +13,7 @@ class MusicStoreTest {
 	// Determined variables to avoid duplicated code
 	MusicStore musicStore = new MusicStore();
 	
-	Song song1 = new Song("These Chains", "Toto", "The Seventh One", Rating.ZERO, false);
+	Song song1 = new Song("These Chains", "Toto", "The Seventh One", Rating.ZERO, false, 0);
     Album album1 = new Album("The Seventh One", "Toto", "Rock", 1988);
     Artist artist1 = new Artist("Toto");
     Artist artist2 = new Artist("Toto");

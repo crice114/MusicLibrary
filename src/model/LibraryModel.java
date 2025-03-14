@@ -62,6 +62,18 @@ public class LibraryModel {
 	    }
 	    return results;
 	}
+
+/*  // Create new ArrayList with found songs
+	public ArrayList<Song> getSongByGenre(String genre) {
+	    ArrayList<Song> results = new ArrayList<Song>();
+	    for (Song s : songs) {
+	    	// Ignore case for better user experience
+	        if (s.getAlbum().getGenre().equalsIgnoreCase(genre)) {
+	            results.add(s);
+	        }
+	    }
+	    return results;
+	}*/
 	
 	// Create new ArrayList with found albums
 	public ArrayList<Album> getAlbumByTitleOrArtist(String title) {
