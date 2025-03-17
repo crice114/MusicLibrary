@@ -233,12 +233,41 @@ public class LibraryView {
         }
     }
 
-    // #3 SEARCH SONG
+    // #3 SEARCH SONG + REQUEST ALBUM INFO
     private void searchSong() {
         System.out.print("\n🔍 Enter song title or artist: ");
         String title = scanner.nextLine();
         List<Song> results = musicStore.getSongsByTitleOrArtist(title);
         displaySearchResults(results, "song");
+
+        // If results exist, ask if the user wants album details
+        if (!results.isEmpty()) {
+            System.out.print("\n📀 Would you like to see album details? (y/n): ");
+            String response = scanner.nextLine().trim().toLowerCase();
+            
+            if (response.equals("y")) {
+                for (Song song : results) {
+                    String albumTitle = song.getAlbum();
+                    
+                    // Retrieve albums by title (returns a list)
+                    List<Album> albums = musicStore.getAlbumsByTitleOrArtist(albumTitle);
+                    
+                    if (albums.isEmpty()) {
+                        System.out.println("\n❌ No album information found for: " + albumTitle);
+                    } else {
+                        for (Album album : albums) {
+                        	boolean inLibrary = model.albumInLibrary(album); // Check if in user library
+                        	System.out.println("\n📀 Album: " + album.getTitle());
+                            System.out.println("   🎤 Artist: " + album.getArtist());
+                            System.out.println("   🎵 Genre: " + album.getGenre());
+                            System.out.println("   📅 Release Year: " + album.getYearReleased());
+                            System.out.println("   🎶 Songs: " + album.getSongs());
+                            System.out.println("   📚 In Your Library: " + (inLibrary ? "✅ Yes" : "❌ No"));
+                        }
+                    }
+                }
+            }
+        }
     }
 
     // #4 SEARCH ALBUM
