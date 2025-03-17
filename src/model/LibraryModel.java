@@ -449,72 +449,65 @@ public class LibraryModel {
 	}
 	
 	//sort the songs alphabetically by artist
-		public List<Song> getSortedSongsByArtist() {
-			List<Song> sortedByArtist = new ArrayList<>(songs);
-			int n = sortedByArtist.size();
-			
-			for(int i = 0; i < n-1; i++) {
-				for(int j = 0; j < n-i-1; j++) {
-					if (sortedByArtist.get(j).getArtist().compareToIgnoreCase(sortedByArtist.get(j+1).getArtist()) > 0) {
-						Song tempSong = sortedByArtist.get(j);
-						sortedByArtist.set(j, sortedByArtist.get(j+1));
-						sortedByArtist.set(j+1,  tempSong);
-					}
+	public List<Song> getSortedSongsByArtist() {
+		List<Song> sortedByArtist = new ArrayList<>(songs);
+		int n = sortedByArtist.size();
+		
+		for(int i = 0; i < n-1; i++) {
+			for(int j = 0; j < n-i-1; j++) {
+				if (sortedByArtist.get(j).getArtist().compareToIgnoreCase(sortedByArtist.get(j+1).getArtist()) > 0) {
+					Song tempSong = sortedByArtist.get(j);
+					sortedByArtist.set(j, sortedByArtist.get(j+1));
+					sortedByArtist.set(j+1,  tempSong);
 				}
 			}
-			return sortedByArtist;
 		}
+		return sortedByArtist;
+	}
 	
 		
 	//sort songs by rating in  ascending order
-		public List<Song> getSortedSongsByRating() {
-			List<Song> sortedByRating = new ArrayList<>(songs);
-			int n = sortedByRating.size();
-			
-			for (int i = 0; i < n - 1; i++) {
-	            for (int j = 0; j < n - i - 1; j++) {
-	                if (sortedByRating.get(j).getRating().getStars() > sortedByRating.get(j+1).getRating().getStars()) {
-	          
-	                    Song temp = sortedByRating.get(j);
-	                    sortedByRating.set(j, sortedByRating.get(j+1));
-	                    sortedByRating.set(j+1, temp);
-	                }
-	            }
-	        }
-	        return sortedByRating;
-			
-		}
+	public List<Song> getSortedSongsByRating() {
+		List<Song> sortedByRating = new ArrayList<>(songs);
+		int n = sortedByRating.size();
+		
+		for (int i = 0; i < n - 1; i++) {
+            for (int j = 0; j < n - i - 1; j++) {
+                if (sortedByRating.get(j).getRating().getStars() > sortedByRating.get(j+1).getRating().getStars()) {
+          
+                    Song temp = sortedByRating.get(j);
+                    sortedByRating.set(j, sortedByRating.get(j+1));
+                    sortedByRating.set(j+1, temp);
+                }
+            }
+        }
+        return sortedByRating;
+		
+	}
 		
 		
-		//use iterator to shuffle songs
-	    public Iterator<Song> shuffleLibrary() {
-	        List<Song> shuffledList = new ArrayList<>(songs);
-	        Collections.shuffle(shuffledList);
-	        return shuffledList.iterator();
-	    }
+	//use iterator to shuffle songs
+    public Iterator<Song> shuffleLibrary() {
+        List<Song> shuffledList = new ArrayList<>(songs);
+        Collections.shuffle(shuffledList);
+        return shuffledList.iterator();
+    }
 	    
 	    
 	 // Remove a song from the library
-	    public String removeSong(String title, String artist) {
-	        for (Song song : songs) {
-	            if (song.getTitle().equalsIgnoreCase(title) && song.getArtist().equalsIgnoreCase(artist)) {
-	                songs.remove(song);
-	                return "Removed the song " + title + " by " + artist;
-	            }
-	        }
-	        return "Song was not found";
-	    }
+    public String removeSong(String title, String artist) {
+        for (Song song : songs) {
+            if (song.getTitle().equalsIgnoreCase(title) && song.getArtist().equalsIgnoreCase(artist)) {
+                songs.remove(song);
+                return "Removed the song " + title + " by " + artist;
+            }
+        }
+        return "Song was not found";
+    }
 
-	    // Remove an album from the library
-	    public String removeAlbum(String title, String artist) {
-	        for (Album album : albums) {
-	            if (album.getTitle().equalsIgnoreCase(title) && album.getArtist().equalsIgnoreCase(artist)) {
-	                albums.remove(album);
-	                return "Removed the album " + title + " by " + artist;
-	            }
-	        }
-	        return "Album was not found";
-	    }
+	   
+
+	
 	    
 	    
 	    //get shuffled playlist
@@ -525,6 +518,22 @@ public class LibraryModel {
 	        }
 	        return null; // Return null if the playlist does not exist
 	    }
+
+
+    public String removeAlbum(String title, String artist) {
+        for (Album album : albums) {
+            if (album.getTitle().equalsIgnoreCase(title) && album.getArtist().equalsIgnoreCase(artist)) {
+                albums.remove(album);
+                return "Removed the album " + title + " by " + artist;
+            }
+        }
+        return "Album was not found";
+    }
+    
+    
+    public boolean albumInLibrary(Album album) {
+    	return albums.contains(album);
+    }
 
 
 	
