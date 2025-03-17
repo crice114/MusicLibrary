@@ -515,6 +515,17 @@ public class LibraryModel {
 	        }
 	        return "Album was not found";
 	    }
+	    
+	    
+	    //get shuffled playlist
+	    public Iterator<Song> getShuffledPlaylist(String playlistName) {
+	        Playlist playlist = getPlaylistByName(playlistName);
+	        if (playlist != null) {
+	            return playlist.shufflePlaylist();
+	        }
+	        return null; // Return null if the playlist does not exist
+	    }
+
 
 	
 	
