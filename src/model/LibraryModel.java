@@ -505,7 +505,21 @@ public class LibraryModel {
         return "Song was not found";
     }
 
-	    // Remove an album from the library
+	   
+
+	
+	    
+	    
+	    //get shuffled playlist
+	    public Iterator<Song> getShuffledPlaylist(String playlistName) {
+	        Playlist playlist = getPlaylistByName(playlistName);
+	        if (playlist != null) {
+	            return playlist.shufflePlaylist();
+	        }
+	        return null; // Return null if the playlist does not exist
+	    }
+
+
     public String removeAlbum(String title, String artist) {
         for (Album album : albums) {
             if (album.getTitle().equalsIgnoreCase(title) && album.getArtist().equalsIgnoreCase(artist)) {
@@ -520,6 +534,7 @@ public class LibraryModel {
     public boolean albumInLibrary(Album album) {
     	return albums.contains(album);
     }
+
 
 	
 	

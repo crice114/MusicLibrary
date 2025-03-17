@@ -130,7 +130,8 @@ public class LibraryView {
             System.out.println("20. View frequently played songs");
             System.out.println("21. Remove a song from library");
             System.out.println("22. Remove an album from library");
-            System.out.println("23. Exit");
+            System.out.println("23. Shuffle a Playlist.");
+            System.out.println("24. Exit");
 
             System.out.print("Enter your choice: ");
 
@@ -161,7 +162,8 @@ public class LibraryView {
                 case 20 -> displayFrequentlyPlayedSongs();
                 case 21 -> removeSong();  
                 case 22 -> removeAlbum();
-                case 23 -> {
+                case 23 -> shufflePlaylist();
+                case 24 -> {
                     System.out.println("\n👋 Thank you for using the Music Library!");
                     return;
                 }
@@ -533,6 +535,26 @@ public class LibraryView {
         String result = model.removeAlbum(title, artist);
         System.out.println(result);
     }
+    
+    
+    
+    //// shuffle a playlist
+    private void shufflePlaylist() {
+        System.out.print("\n🔀 Enter playlist name to shuffle: ");
+        String playlistName = scanner.nextLine();
+
+        Iterator<Song> shuffledSongs = model.getShuffledPlaylist(playlistName);
+        if (shuffledSongs == null) {
+            System.out.println("❌ Playlist not found.");
+            return;
+        }
+
+        System.out.println("\n🎶 Shuffled Playlist: ");
+        while (shuffledSongs.hasNext()) {
+            System.out.println("🎵 " + shuffledSongs.next().getTitle());
+        }
+    }
+
 
 
     // MAIN
