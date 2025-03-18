@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -29,6 +30,10 @@ class LibraryModelTest {
     Album album1 = new Album("The Seventh One", "Toto", "Rock", 1988);
     Album album2 = new Album("19", "Adele", null, 0);
     Album album3 = new Album("A Rush of Blood to the Head", "Coldplay", null, 0);
+
+    Song songSame1 = new Song("Lullaby", "OneRepublic", "Waking Up", Rating.ZERO, false, 0);
+    Song songSame2 = new Song("Lullaby", "Leonard Cohen", "Old Ideas", Rating.ZERO, false, 0);
+    
 	
     // Before Each allows the code below to run before every test
     @BeforeEach
@@ -314,24 +319,58 @@ class LibraryModelTest {
 	@Test
 	void testRemoveSong() {
 	    library.addSong(song3.getTitle(), musicStore, song3.getArtist());
-
 	    assertEquals(1, library.getSongs().size()); 
 	    library.removeSong(song3.getTitle(), song3.getArtist());
 	    assertEquals(0, library.getSongs().size()); 
+	    assertEquals("Song was not found", library.removeSong(null, null));
+	    
 	}
 
 	@Test
 	void testRemoveAlbum() {
 	    library.addAlbum(album2.getTitle(), musicStore, album2.getArtist());
-
 	    assertEquals(1, library.getAlbums().size()); 
 	    library.removeAlbum(album2.getTitle(), album2.getArtist());
 	    assertEquals(0, library.getAlbums().size()); 
+	    assertEquals("Album was not found", library.removeAlbum(null, null));
 	}
 
+	@Test
+	void testPlaySong() {
+		assertEquals("Song not in store!", library.playSong(song1.getTitle(), musicStore, song1.getArtist()));
+		library.addSong(song2.getTitle(), musicStore, song2.getArtist());
+		assertEquals(0, song2.getCount());
+		library.playSong(song2.getTitle(), musicStore, song2.getArtist());
+		library.playSong(songSame1.getTitle(), musicStore, songSame1.getArtist());
+	}
 	
+	@Test
+	void testGetFrequentSongs() {
+		library.addSong(song2.getTitle(), musicStore, song2.getArtist());
+		library.playSong(song2.getTitle(), musicStore, song2.getArtist());
+		assertEquals(1, library.getFrequentSongs().size());
+	}
 	
+	@Test
+	void testGetRecentlyPlayedSongs() {
+		library.addSong(song2.getTitle(), musicStore, song2.getArtist());
+		library.playSong(song2.getTitle(), musicStore, song2.getArtist());
+		assertEquals(1, library.getRecentlyPlayedSongs().size());
+	}
 	
+	@Test
+	void testAlbumInLibrary() {
+		library.addAlbum(album1.getTitle(), musicStore, null);
+		assertFalse(library.albumInLibrary(album1));
+	}
+	
+	@Test
+	void testShuffleLibrary() {
+		Iterator<Song> shuffle0 = library.shuffleLibrary();
+		library.addSong(song2.getTitle(), musicStore, song2.getArtist());
+		Iterator<Song> shuffle1 = library.shuffleLibrary();
+		assertNotEquals(shuffle0, shuffle1);
+	}
 	
 	
 }

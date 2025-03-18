@@ -152,8 +152,9 @@ public class LibraryModel {
 		if (playingSongs.size() == 1) {
 			Song song = playingSongs.get(0);
 			
-			if(!songs.contains(song)) {
+			if(songs.contains(song)) {
 				Song incCountSong = song.incrementCount();  // Replace song with increased count song (immutable)
+				songs.remove(song);
 				songs.add(incCountSong);  // Deal with songs directly rather than string ArrayList
 				
 				// if the playlist has 10 recent played, remove last
@@ -178,6 +179,7 @@ public class LibraryModel {
 		for (Song song2 : playingSongs) {
 			if (song2.getArtist().equalsIgnoreCase(artist) && !songs.contains(song2)) {
 				Song incCountSong2 = song2.incrementCount();
+				songs.remove(song2);
 				songs.add(incCountSong2);  // Deal with songs directly rather than string ArrayList
 				return "Song " + incCountSong2 + " played\nCount: " + incCountSong2.getCount();
 			}
@@ -217,7 +219,7 @@ public class LibraryModel {
 		
 		// If more than one album with same title, go back to ask for artist
 		else if (artist == null) {
-			return "Artist needed. More than one song with the same title.";
+			return "Artist needed. More than one album with the same title.";
 		}
 		
 		// Get album-artist match
@@ -504,20 +506,15 @@ public class LibraryModel {
         }
         return "Song was not found";
     }
-
-	   
-
-	
 	    
-	    
-	    //get shuffled playlist
-	    public Iterator<Song> getShuffledPlaylist(String playlistName) {
-	        Playlist playlist = getPlaylistByName(playlistName);
-	        if (playlist != null) {
-	            return playlist.shufflePlaylist();
-	        }
-	        return null; // Return null if the playlist does not exist
-	    }
+    //get shuffled playlist
+    public Iterator<Song> getShuffledPlaylist(String playlistName) {
+        Playlist playlist = getPlaylistByName(playlistName);
+        if (playlist != null) {
+            return playlist.shufflePlaylist();
+        }
+        return null; // Return null if the playlist does not exist
+    }
 
 
     public String removeAlbum(String title, String artist) {
