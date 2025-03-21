@@ -1,1 +1,5 @@
 /bin/
+# Ignore test-generated user data
+/users.txt
+/*_library.txt
+
