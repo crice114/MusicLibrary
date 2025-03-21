@@ -18,7 +18,7 @@ public class UserManagerTest {
     void setup() {
         userManager = new UserManager();
         new File("users.txt").delete();
-        new File("alice_library.txt").delete();
+        new File("bobdylan_library.txt").delete();
     }
 
     @Test
