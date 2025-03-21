@@ -10,10 +10,10 @@ public class PasswordManagerTest {
 
     @Test
     void testHashAndVerifyPassword() {
-        String password = "superSecret123!";
+        String password = "password321";
         String hash = PasswordManager.hashPassword(password);
 
-        assertNotNull(hash, "Hashed password should not be null");
+        assertNotNull(hash, "hashed password should not be null");
         assertTrue(PasswordManager.verifyPassword(password, hash), "correct password should verify");
         assertFalse(PasswordManager.verifyPassword("wrongPassword", hash), "incorrect password should fail verification");
     }
@@ -29,7 +29,7 @@ public class PasswordManagerTest {
 
     @Test
     void testMalformedStoredHash() {
-        String password = "whatever";
+        String password = "wrong";
         String badStoredHash = "not_a_valid_hash_format";
 
         assertFalse(PasswordManager.verifyPassword(password, badStoredHash), "wrong hash should return false");
