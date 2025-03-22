@@ -25,10 +25,11 @@ import java.util.Scanner;
 
 
 public class LibraryView {
-	// VARIABLES
+    // VARIABLES
     private final LibraryModel model;
     private final MusicStore musicStore;
     private final Scanner scanner;
+    private User currentUser; // Track the logged-in user
 
     // CONSTRUCTOR
     public LibraryView(LibraryModel model, MusicStore musicStore) {
@@ -50,6 +51,7 @@ public class LibraryView {
         // Check if the user exists and password matches
         User user = model.checkUser(username);
         if (user != null && Password.verifyPassword(password, user.getPassword())) {
+            this.currentUser = user;  // Set the logged-in user
             System.out.println("\n✅ Login successful! Welcome, " + username + "!");
             return true;
         } else {
@@ -83,6 +85,12 @@ public class LibraryView {
         System.out.println("\n✅ User created successfully! You can now log in.");
     }
 
+    // LOGOUT METHOD
+    private void logout() {
+        currentUser = null;  // Clear the logged-in user
+        System.out.println("\n🔒 You have been logged out.");
+    }
+
     // MENU OPTION
     public void start() {
         boolean loggedIn = false;
@@ -105,33 +113,39 @@ public class LibraryView {
                     System.out.println("\n❌ Invalid choice. Please try again.");
             }
         }
-    	
-        while (true) {
+
+        // This loop continues while the user is logged in
+        while (loggedIn) {
             System.out.println("\n🎵 Welcome to Your Music Library 🎵");
-            System.out.println("1. Add a song from store to library");
-            System.out.println("2. Play song from library");
-            System.out.println("3. Add an album from store to library");
-            System.out.println("4. Search for a song in our store");
-            System.out.println("5. Search for an album in our store");
-            System.out.println("6. Search by artist from our store");
-            System.out.println("7. Search by genre from our store");
-            System.out.println("8. Search for a playlist");
-            System.out.println("9. Create a new playlist");
-            System.out.println("10. Add song to playlist");
-            System.out.println("11. Remove song from playlist");
-            System.out.println("12. Rate a song");
-            System.out.println("13. Mark song as favorite");
-            System.out.println("14. View all songs");
-            System.out.println("15. View all artists");
-            System.out.println("16. View all albums");
-            System.out.println("17. View all playlists");
-            System.out.println("18. View favorite songs");
-            System.out.println("19. View recently played songs");
-            System.out.println("20. View frequently played songs");
-            System.out.println("21. Remove a song from library");
-            System.out.println("22. Remove an album from library");
-            System.out.println("23. Shuffle a Playlist.");
-            System.out.println("24. Exit");
+            System.out.println("1. Search for a song in library");
+            System.out.println("2. Search for an album in library");
+            System.out.println("3. Search by artist in library");
+            System.out.println("4. Search by genre in library");
+            System.out.println("5. Add a song from store to library");
+            System.out.println("6. Play song from library");
+            System.out.println("7. Add an album from store to library");
+            System.out.println("8. Search for a song in our store");
+            System.out.println("9. Search for an album in our store");
+            System.out.println("10. Search by artist from our store");
+            System.out.println("11. Search by genre from our store");
+            System.out.println("12. Search for a playlist");
+            System.out.println("13. Create a new playlist");
+            System.out.println("14. Add song to playlist");
+            System.out.println("15. Remove song from playlist");
+            System.out.println("16. Rate a song");
+            System.out.println("17. Mark song as favorite");
+            System.out.println("18. View all songs");
+            System.out.println("19. View all artists");
+            System.out.println("20. View all albums");
+            System.out.println("21. View all playlists");
+            System.out.println("22. View favorite songs");
+            System.out.println("23. Remove a song from library");
+            System.out.println("24. Remove an album from library");
+            System.out.println("25. Sort songs");
+            System.out.println("26. Shuffle songs");
+            System.out.println("27. Shuffle a Playlist");
+            System.out.println("28. Log out");  // New log-out option
+            System.out.println("29. Exit");
 
             System.out.print("Enter your choice: ");
 
@@ -140,34 +154,140 @@ public class LibraryView {
 
             // CALL METHODS
             switch (choice) {
-                case 1 -> addSong();
-                case 2 -> playSong();
-                case 3 -> addAlbum();
-                case 4 -> searchSong();
-                case 5 -> searchAlbum();
-                case 6 -> searchByArtist();
-                case 7 -> searchByGenre();
-                case 8 -> searchPlaylist();
-                case 9 -> createPlaylist();
-                case 10 -> addSongToPlaylist();
-                case 11 -> removeSongFromPlaylist();
-                case 12 -> rateSong();
-                case 13 -> markSongAsFavorite();
-                case 14 -> listSongs();
-                case 15 -> listArtists();
-                case 16 -> listAlbums();
-                case 17 -> listPlaylists();
-                case 18 -> listFavoriteSongs();
-                case 19 -> displayRecentlyPlayedSongs();
-                case 20 -> displayFrequentlyPlayedSongs();
-                case 21 -> removeSong();  
-                case 22 -> removeAlbum();
-                case 23 -> shufflePlaylist();
-                case 24 -> {
+                case 1 -> searchSongLibrary();
+                case 2 -> searchAlbumLibrary();
+                case 3 -> searchByArtistLibrary();
+                case 4 -> searchByGenreLibrary();
+                case 5 -> addSong();
+                case 6 -> playSong();
+                case 7 -> addAlbum();
+                case 8 -> searchSong();
+                case 9 -> searchAlbum();
+                case 10 -> searchByArtist();
+                case 11 -> searchByGenre();
+                case 12 -> searchPlaylist();
+                case 13 -> createPlaylist();
+                case 14 -> addSongToPlaylist();
+                case 15 -> removeSongFromPlaylist();
+                case 16 -> rateSong();
+                case 17 -> markSongAsFavorite();
+                case 18 -> listSongs();
+                case 19 -> listArtists();
+                case 20 -> listAlbums();
+                case 21 -> listPlaylists();
+                case 22 -> listFavoriteSongs();
+                case 23 -> removeSong();
+                case 24 -> removeAlbum();
+                case 25 -> listSongsBySorting();
+                case 26 -> shuffleLibrary();
+                case 27 -> shufflePlaylist();
+                case 28 -> {
+                    logout();  // Log the user out
+                    loggedIn = false; // Set loggedIn to false to return to the login screen
+                    break;  // Exit to login screen
+                }
+                case 29 -> {
                     System.out.println("\n👋 Thank you for using the Music Library!");
-                    return;
+                    return; // End the program
                 }
                 default -> System.out.println("\n❌ Invalid choice. Please try again.");
+            }
+
+            // After logging out, loop back to the login screen
+            if (!loggedIn) {
+                System.out.println("\nYou will be logged out. Please log in again.");
+                start(); // Restart the login process
+            }
+        }
+    }
+    
+    private void searchSongLibrary() {
+        System.out.print("\n🔍 Enter song title or artist: ");
+        String title = scanner.nextLine();
+        List<Song> results = model.getSongsByTitleOrArtist(title);
+        displaySearchResults(results, "song");
+
+        // If results exist, ask if the user wants album details
+        if (!results.isEmpty()) {
+            System.out.print("\n📀 Would you like to see album details? (y/n): ");
+            String response = scanner.nextLine().trim().toLowerCase();
+            
+            if (response.equals("y")) {
+                for (Song song : results) {
+                    String albumTitle = song.getAlbum();
+                    
+                    // Retrieve albums by title (returns a list)
+                    List<Album> albums = model.getAlbumsByTitleOrArtist(albumTitle);
+                    
+                    if (albums.isEmpty()) {
+                        System.out.println("\n❌ No album information found for: " + albumTitle);
+                    } else {
+                        for (Album album : albums) {
+                        	boolean inLibrary = model.albumInLibrary(album); // Check if in user library
+                        	/*System.out.println("\n📀 Album: " + album.getTitle());
+                            System.out.println("   🎤 Artist: " + album.getArtist());
+                            System.out.println("   🎵 Genre: " + album.getGenre());
+                            System.out.println("   📅 Release Year: " + album.getYearReleased());
+                            System.out.println("   🎶 Songs: " + album.getSongs());*/
+                        	System.out.println(album.toString());
+                            System.out.println("   📚 In Your Library: " + (inLibrary ? "✅ Yes" : "❌ No"));
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    // #4 SEARCH ALBUM
+    private void searchAlbumLibrary() {
+        System.out.print("\n🔍 Enter album title or artist: ");
+        String title = scanner.nextLine();
+        List<Album> results = model.getAlbumsByTitleOrArtist(title);
+        displaySearchResults(results, "album");
+    }
+
+    // #5 SEARCH BY ARTIST
+    private void searchByArtistLibrary() {
+        System.out.print("\n🔍 Enter artist name: ");
+        String artistName = scanner.nextLine();
+
+        List<Song> songResults = model.getSongsByTitleOrArtist(artistName);
+        List<Album> albumResults = model.getAlbumsByTitleOrArtist(artistName);
+
+        if (albumResults.isEmpty() && songResults.isEmpty()) {
+            System.out.println("❌ No results found for artist: " + artistName);
+        } else {
+            System.out.println("\n🎤 Artist: " + artistName);
+            if (!albumResults.isEmpty()) {
+                System.out.println("\n📀 Albums:");
+                for (Album album : albumResults) {
+                    System.out.println("   📀 " + album.getTitle());
+                }
+            }
+            if (!songResults.isEmpty()) {
+                System.out.println("\n🎵 Songs:");
+                for (Song song : songResults) {
+                    System.out.println("   🎶 " + song.getTitle() + " (from " + song.getAlbum() + ")");
+                }
+            }
+        }
+    }
+    
+ // #7 SEARCH BY GENRE
+    private void searchByGenreLibrary() {
+        System.out.print("\n🔍 Enter genre: ");
+        String genre = scanner.nextLine().trim(); // Get the genre input
+
+        List<Song> songResults = model.getSongsByGenre(genre);
+
+        if (songResults.isEmpty()) {
+            System.out.println("❌ No results found for genre: " + genre);
+        } else {
+            System.out.println("\n🎤 Genre: " + genre);
+            // Output the song results
+            System.out.println("\n🎵 Songs:");
+            for (Song song : songResults) {
+                System.out.println("   🎶 " + song.getTitle() + " (from " + song.getAlbum() + ")");
             }
         }
     }
@@ -198,7 +318,7 @@ public class LibraryView {
         System.out.print("\n🎵 Enter song title to play: ");
         String title = scanner.nextLine();
         
-        String result = model.playSong(title, musicStore, null);
+        String result = model.playSong(title, null);
         System.out.println(result);
         
         int numSongs = musicStore.getSongsByTitleOrArtist(title).size();
@@ -209,7 +329,7 @@ public class LibraryView {
             String artistName = scanner.nextLine().trim();
 
             // Call the model's addSong method again with the artist name
-            result = model.playSong(title, musicStore, artistName);
+            result = model.playSong(title, artistName);
             System.out.println(result);
         }
     }
@@ -329,8 +449,18 @@ public class LibraryView {
     
     // #6 SEARCH PLAYLIST
     private void searchPlaylist() {
+    	// Ensure all auto-generated playlists are up to date
+        model.getAutomaticPlaylists();
+        
         System.out.print("\n📜 Enter playlist name: ");
-        String playlistName = scanner.nextLine();
+        String playlistName = scanner.nextLine().trim();  // Trim whitespace just in case
+        
+        if (playlistName.isEmpty()) {
+            System.out.println("❌ Playlist name cannot be empty.");
+            return;
+        }
+
+        // 🔹 Now, search for the playlist AFTER ensuring it's created
         Playlist playlist = model.getPlaylistByName(playlistName);
 
         if (playlist == null) {
@@ -351,30 +481,63 @@ public class LibraryView {
     // #7 CREATE PLAYLIST
     private void createPlaylist() {
         System.out.print("\n📜 Enter playlist name: ");
-        String name = scanner.nextLine();
-        String result = model.createPlaylist(name);
+        String name = scanner.nextLine().trim();  // Trim input to avoid leading/trailing spaces
+        
+        if (name.isEmpty()) {
+            System.out.println("❌ Playlist name cannot be empty.");
+            return;  // Early exit if name is empty
+        }
+
+        String result = model.createPlaylist(name);  // Call the model to create the playlist
         System.out.println(result);
     }
 
-    // #8 ADD SONG TO PLAYLIST
+ // #8 ADD SONG TO PLAYLIST
     private void addSongToPlaylist() {
+    	// Ensure all auto-generated playlists are up to date
+        model.getAutomaticPlaylists();
+        
         System.out.print("\n📜 Enter playlist name: ");
-        String playlistName = scanner.nextLine();
+        String playlistName = scanner.nextLine().trim();  // Trim spaces
+
+        if (playlistName.isEmpty()) {
+            System.out.println("❌ Playlist name cannot be empty.");
+            return;
+        }
 
         System.out.print("\n🎵 Enter song title to add: ");
-        String songTitle = scanner.nextLine();
+        String songTitle = scanner.nextLine().trim();  // Trim spaces
+
+        if (songTitle.isEmpty()) {
+            System.out.println("❌ Song title cannot be empty.");
+            return;
+        }
 
         String result = model.addToPlaylist(playlistName, songTitle);
         System.out.println(result);
     }
 
     // #9 REMOVE SONG FROM PLLAYLIST
+ // #9 REMOVE SONG FROM PLAYLIST
     private void removeSongFromPlaylist() {
+    	// Ensure all auto-generated playlists are up to date
+        model.getAutomaticPlaylists();
+        
         System.out.print("\n📜 Enter playlist name: ");
-        String playlistName = scanner.nextLine();
+        String playlistName = scanner.nextLine().trim();  // Trim spaces
+
+        if (playlistName.isEmpty()) {
+            System.out.println("❌ Playlist name cannot be empty.");
+            return;
+        }
 
         System.out.print("\n🎵 Enter song title to remove: ");
-        String songTitle = scanner.nextLine();
+        String songTitle = scanner.nextLine().trim();  // Trim spaces
+
+        if (songTitle.isEmpty()) {
+            System.out.println("❌ Song title cannot be empty.");
+            return;
+        }
 
         String result = model.removeFromPlaylist(playlistName, songTitle);
         System.out.println(result);
@@ -427,8 +590,17 @@ public class LibraryView {
 
     // #15 LIST PLAYLIST
     private void listPlaylists() {
+        // Make sure the automatic playlists (Top Rated, Favorite, Genre-based) are generated
+        model.getAutomaticPlaylists();
+        
         List<String> playlists = model.getPlaylistNames();
-        displayListResults(playlists, "playlists");
+        
+        // Check if there are any playlists
+        if (playlists.isEmpty()) {
+            System.out.println("❌ No playlists found.");
+        } else {
+            displayListResults(playlists, "playlists");
+        }
     }
 
     // #16 LIST FAVORITE SONGS
@@ -474,36 +646,8 @@ public class LibraryView {
             list.forEach(item -> System.out.println("   " + item));
         }
     }
-    
-    private void displayFrequentlyPlayedSongs() {
-        List<Song> frequent = model.getFrequentSongs();
-        
-        System.out.println("\n🔥 Top 10 Most Played Songs:");
-        if (frequent.isEmpty()) {
-            System.out.println("No songs have been played yet.");
-        } else {
-        	int i = 1;
-            for (Song song : frequent) {
-                System.out.println(i + ". " + song);
-                i++;
-            }
-        }
-    }
 
-    private void displayRecentlyPlayedSongs() {
-        List<Song> recent = model.getRecentlyPlayedSongs();
-        
-        System.out.println("\n⏳ Top 10 Recently Played Songs:");
-        if (recent.isEmpty()) {
-            System.out.println("No songs have been played yet.");
-        } else {
-            int i = 1;
-            for (Song song : recent) {
-                System.out.println(i + ". " + song);
-                i++;
-            }
-        }
-    }
+    
     private void shuffleLibrary() {
         System.out.println("\n🔀 Shuffling your music library...");
         Iterator<Song> shuffledSongs = model.shuffleLibrary();
@@ -536,7 +680,19 @@ public class LibraryView {
         System.out.println(result);
     }
     
-    
+    private void listSongsBySorting() {
+        System.out.print("\n🗂️ Enter sorting method (title, artist, rating): ");
+        String method = scanner.nextLine().trim().toLowerCase();  // Normalize input to lowercase
+        
+        // Check if the input is valid
+        if (!method.equals("title") && !method.equals("artist") && !method.equals("rating")) {
+            System.out.println("\n❌ Invalid sorting method! Please choose 'title', 'artist', or 'rating'.");
+            return;  // Exit the method early if the input is invalid
+        }
+
+        List<String> songs = model.getSortedSongs(method);
+        displayListResults(songs, "sorted songs by " + method + " 🗂️");
+    }
     
     //// shuffle a playlist
     private void shufflePlaylist() {
