@@ -10,9 +10,14 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Deque;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
-import java.util.concurrent.LinkedBlockingQueue;
+import java.util.Map.Entry;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class LibraryModel {
@@ -23,7 +28,9 @@ public class LibraryModel {
 	private ArrayList<Playlist> playlists;
 	
 	private ArrayList<User> users;
-	private LinkedBlockingQueue<Song> recentSongs;
+	private Deque<Song> recentSongs;
+	
+	private ArrayList<Playlist> playlistsAuto;
 		
 	// CONSTRUCTOR 
 	public LibraryModel() {
@@ -33,7 +40,9 @@ public class LibraryModel {
 		this.playlists = new ArrayList<Playlist>();
 		
 		this.users = new ArrayList<User>();
-		this.recentSongs = new LinkedBlockingQueue<Song>(10);
+		this.recentSongs = new LinkedList<Song>();
+		
+		this.playlistsAuto = new ArrayList<Playlist>();
 	}
 	
 	// METHODS
@@ -52,7 +61,7 @@ public class LibraryModel {
 	
 	
 	// Create new ArrayList with found songs
-	public ArrayList<Song> getSongByTitleOrArtist(String title) {
+	public ArrayList<Song> getSongsByTitleOrArtist(String title) {
 	    ArrayList<Song> results = new ArrayList<Song>();
 	    for (Song s : songs) {
 	    	// Ignore case for better user experience
@@ -62,21 +71,9 @@ public class LibraryModel {
 	    }
 	    return results;
 	}
-
-/*  // Create new ArrayList with found songs
-	public ArrayList<Song> getSongByGenre(String genre) {
-	    ArrayList<Song> results = new ArrayList<Song>();
-	    for (Song s : songs) {
-	    	// Ignore case for better user experience
-	        if (s.getAlbum().getGenre().equalsIgnoreCase(genre)) {
-	            results.add(s);
-	        }
-	    }
-	    return results;
-	}*/
 	
 	// Create new ArrayList with found albums
-	public ArrayList<Album> getAlbumByTitleOrArtist(String title) {
+	public ArrayList<Album> getAlbumsByTitleOrArtist(String title) {
 	    ArrayList<Album> results = new ArrayList<>();
 	    for (Album a : albums) {
 	        if (a.getTitle().equalsIgnoreCase(title) || a.getArtist().equalsIgnoreCase(title)) {
@@ -85,6 +82,19 @@ public class LibraryModel {
 	    }
 	    return results;
 	}
+	
+    public ArrayList<Song> getSongsByGenre(String genre) {
+    	ArrayList<Song> results = new ArrayList<>();
+    	for (Song s : songs) {
+    		String songAlbum = s.getAlbum();
+    		for (Album a : albums) {
+    			if (a.getTitle().equalsIgnoreCase(songAlbum) && a.getGenre().equalsIgnoreCase(genre)) {
+    				results.add(s);
+    			}
+    		}
+    	}
+    	return results;
+    }
 	
 	// Add song to library - check for duplicates and nonexistent.
 	public String addSong(String title, MusicStore musicStore, String artist) {
@@ -109,6 +119,20 @@ public class LibraryModel {
 			
 			if(!songs.contains(song)) {
 				songs.add(song);  // Deal with songs directly rather than string ArrayList
+				
+				boolean albumFound = false;
+				
+				for(Album a : albums) {
+					if (a.getTitle().equalsIgnoreCase(song.getAlbum())) {
+						albumFound = true;
+						break;
+					}
+				}
+				
+				if (albumFound == false) {
+					addPartAlbum(song.getAlbum(), musicStore, song.getArtist());
+				}
+				
 				return "Song " + song + " added to library";
 			}
 			else {
@@ -131,64 +155,7 @@ public class LibraryModel {
 		return "Try again.";
 	}
 	
-	// Play song from library - check for duplicates and nonexistent.
-	public String playSong(String title, MusicStore musicStore, String artist) {
-		ArrayList<Song> playingSongs = new ArrayList<>();
-		
-		// Iterate through the MusicStore songs
-		for (Song s : musicStore.getSongs()) {
-			// Ignore case
-			if (s.getTitle().equalsIgnoreCase(title)) {
-					playingSongs.add(s);  // Deal with songs directly rather than string ArrayList
-			}
-		}
-		
-		// Nonexistent song
-		if (playingSongs.size() == 0) {
-			return "Song not in store!";
-		}
-		
-		// One song available -> check if duplicated
-		if (playingSongs.size() == 1) {
-			Song song = playingSongs.get(0);
-			
-			if(songs.contains(song)) {
-				Song incCountSong = song.incrementCount();  // Replace song with increased count song (immutable)
-				songs.remove(song);
-				songs.add(incCountSong);  // Deal with songs directly rather than string ArrayList
-				
-				// if the playlist has 10 recent played, remove last
-				if(recentSongs.remainingCapacity() == 0) {
-					recentSongs.poll();
-				}
-				recentSongs.offer(incCountSong);
-				
-				return "Song " + incCountSong + " played\nCount: " + incCountSong.getCount();
-			}
-			else {
-				return "Song cannot be played";
-			}
-		}
-		
-		// If more than one song with same title, go back to ask for artist
-		else if (artist == null) {
-			return "Artist needed.";
-		}
-		
-		// Get song-artist match
-		for (Song song2 : playingSongs) {
-			if (song2.getArtist().equalsIgnoreCase(artist) && !songs.contains(song2)) {
-				Song incCountSong2 = song2.incrementCount();
-				songs.remove(song2);
-				songs.add(incCountSong2);  // Deal with songs directly rather than string ArrayList
-				return "Song " + incCountSong2 + " played\nCount: " + incCountSong2.getCount();
-			}
-		}
-		return "Try again.";
-	}
-	
-	// Add song to library - check for duplicates and nonexistent.
-	public String addAlbum(String title, MusicStore musicStore, String artist) {
+	public String addPartAlbum(String title, MusicStore musicStore, String artist) {
 		ArrayList<Album> addingAlbums = new ArrayList<>();
 		
 		// Iterate through the MusicStore songs
@@ -225,8 +192,165 @@ public class LibraryModel {
 		// Get album-artist match
 		for (Album album2 : addingAlbums) {
 			if (album2.getArtist().equalsIgnoreCase(artist) && !albums.contains(album2)) {
-				albums.add(album2);  // Deal with songs directly rather than string ArrayList
-				return "Album: " + album2 + "\nAlbum has been added to library";
+				if(!albums.contains(album2)) {
+					albums.add(album2);  // Deal with albums directly rather than string ArrayList
+					return "Album " + album2 + "\nadded to library";
+				}
+			}
+		}
+		return "Try again.";
+	}
+	
+	// Play song from library - check for duplicates and nonexistent.
+	public String playSong(String title, String artist) {
+		ArrayList<Song> playingSongs = new ArrayList<>();
+		
+		// Iterate through the MusicStore songs
+		for (Song s : songs) {
+			// Ignore case
+			if (s.getTitle().equalsIgnoreCase(title)) {
+					playingSongs.add(s);  // Deal with songs directly rather than string ArrayList
+			}
+		}
+		
+		// Nonexistent song
+		if (playingSongs.size() == 0) {
+			return "Song not in store!";
+		}
+		
+		// One song available -> check if duplicated
+		if (playingSongs.size() == 1) {
+			Song song = playingSongs.get(0);
+			
+			if(songs.contains(song)) {
+				Song incCountSong = song.incrementCount();  // Replace song with increased count song (immutable)
+				songs.remove(song);
+				songs.add(incCountSong);  // Deal with songs directly rather than string ArrayList
+				
+				// remove if instead of for loop (avoid exception)
+				recentSongs.removeIf(s -> (s.toString().equals(incCountSong.toString())));
+				
+				// if the playlist has 10 recent played, remove last
+				if(recentSongs.size() == 10) {
+					recentSongs.pollLast();
+				}
+				
+				recentSongs.addFirst(incCountSong);
+				
+				return "Song " + incCountSong + " played\nCount: " + incCountSong.getCount();
+			}
+			else {
+				return "Song cannot be played";
+			}
+		}
+		
+		// If more than one song with same title, go back to ask for artist
+		else if (artist == null) {
+			return "Artist needed.";
+		}
+		
+		// Get song-artist match
+		for (Song song2 : playingSongs) {
+			if (song2.getArtist().equalsIgnoreCase(artist) && songs.contains(song2)) {
+				Song incCountSong2 = song2.incrementCount();
+				songs.remove(song2);
+				songs.add(incCountSong2);  // Deal with songs directly rather than string ArrayList
+				if(recentSongs.size() == 10) {
+					recentSongs.removeLast();
+				}
+				recentSongs.remove(incCountSong2);
+				recentSongs.addFirst(incCountSong2);
+				return "Song " + incCountSong2 + " played\nCount: " + incCountSong2.getCount();
+			}
+		}
+		return "Try again.";
+	}
+	
+	// Add song to library - check for duplicates and nonexistent.
+	public String addAlbum(String title, MusicStore musicStore, String artist) {
+		ArrayList<Album> addingAlbums = new ArrayList<>();
+		
+		// Iterate through the MusicStore songs
+		for (Album a : musicStore.getAlbums()) {
+			// Ignore case
+			if (a.getTitle().equalsIgnoreCase(title)) {
+					addingAlbums.add(a);  // Deal with songs directly rather than string ArrayList
+			}
+		}
+		
+		// Nonexistent album
+		if (addingAlbums.size() == 0) {
+			return "Album not in store!";
+		}
+		
+		// One album available -> check if duplicated
+		if (addingAlbums.size() == 1) {
+			Album album = addingAlbums.get(0);
+			
+			int songsInAlbumLibrary = 0;
+			
+			for(Song s : album.getSongs()) {
+				if(songs.contains(s)) {
+					songsInAlbumLibrary++;
+				}
+			}
+			
+			if (songsInAlbumLibrary == album.getSongs().size()) {
+				return "Duplicated album";
+			}
+			
+			for(Song s : album.getSongs()) {
+				if (!songs.contains(s)) {
+					songs.add(s);
+				}
+			}
+			
+			if(!albums.contains(album)) {
+				for (Song s : album.getSongs()) {
+					if (!songs.contains(s)) {
+						songs.add(s);
+					}
+				}
+				albums.add(album);  // Deal with albums directly rather than string ArrayList
+			}
+			return "Album " + album + "\nadded to library";
+		}
+		
+		// If more than one album with same title, go back to ask for artist
+		else if (artist == null) {
+			return "Artist needed. More than one album with the same title.";
+		}
+		
+		// Get album-artist match
+		for (Album album2 : addingAlbums) {
+			if (album2.getArtist().equalsIgnoreCase(artist) && !albums.contains(album2)) {
+				int songsInAlbumLibrary2 = 0;
+				
+				for(Song s2 : album2.getSongs()) {
+					if(songs.contains(s2)) {
+						songsInAlbumLibrary2++;
+					}
+				}
+				
+				if (songsInAlbumLibrary2 == album2.getSongs().size()) {
+					return "Duplicated album";
+				}
+				
+				for(Song s2 : album2.getSongs()) {
+					if (!songs.contains(s2)) {
+						songs.add(s2);
+					}
+				}
+				
+				if(!albums.contains(album2)) {
+					for (Song s2 : album2.getSongs()) {
+						if (!songs.contains(s2)) {
+							songs.add(s2);
+						}
+					}
+					albums.add(album2);  // Deal with albums directly rather than string ArrayList
+					return "Album " + album2 + "\nadded to library";
+				}
 			}
 		}
 		return "Try again.";
@@ -237,6 +361,11 @@ public class LibraryModel {
 		for (Playlist p : playlists) {
 			if(p.getName().equalsIgnoreCase(title)) {
 				return "Playlist " + title + " already exists in library.";
+			}
+		}
+		for (Playlist p : playlistsAuto) {
+			if(p.getName().equalsIgnoreCase(title)) {
+				return "Playlist " + title + " automatically exists in library and cannot be manually edited.";
 			}
 		}
 		playlists.add(new Playlist(title));
@@ -254,7 +383,7 @@ public class LibraryModel {
 					}
 				}
 				//if code gets here then song is not found
-				return "Song not found in playlist";
+				return "Song not found in library";
 			}
 		}
 		return "This playlist does not exist";
@@ -272,19 +401,26 @@ public class LibraryModel {
 					
 				}
 				//if code gets here, song is not found
-				return "Song is not in the playlist";
+				return "Song is not in the library";
 			}
 		}
 		return "No playlist exists by that name";
 	}
 	
 	// Get playlist by name
-	public Playlist getPlaylistByName(String name) {
+	public Playlist getPlaylistByName(String name) {		
 	    for (Playlist p : playlists) {
 	        if (p.getName().equalsIgnoreCase(name)) {
 	            return p;
 	        }
 	    }
+	    
+	    for (Playlist p : playlistsAuto) {
+	        if (p.getName().equalsIgnoreCase(name)) {
+	            return p;
+	        }
+	    }
+	    
 	    // Return null if no playlist is found
 	    return null;
 	}
@@ -338,7 +474,11 @@ public class LibraryModel {
 	}
 	
 	public List<Playlist> getPlaylists() {
-		return Collections.unmodifiableList(playlists);
+		ArrayList<Playlist> masterP = new ArrayList<>();
+		masterP.addAll(playlists);
+		masterP.addAll(playlistsAuto);
+		
+		return Collections.unmodifiableList(masterP);
 	}
 	
 	public List<Song> getSongs() {
@@ -352,16 +492,20 @@ public class LibraryModel {
 	// Add getters to return lists of artists, songs, albums, playlists (per spec)
 	// Song titles by iterating songs and albums
 	public List<String> getSongTitles() {
-	    List<String> songTitles = new ArrayList<>();
+		// Set avoids duplicated
+	    Set<String> songTitles = new HashSet<>();
+	    // use toString to identify songs with same titles
 	    for (Song s : songs) {
-	        songTitles.add(s.getTitle());
+	        songTitles.add(s.toString());
 	    }
 	    for (Album a : albums) {
 	        for (Song s : a.getSongs()) {
-	        	songTitles.add(s.getTitle());
+	        	if(songs.contains(s)) {
+	        		songTitles.add(s.toString());
+	        	}
 	        }
 	    }
-	    return songTitles;
+	    return new ArrayList<>(songTitles);
 	}
 	
 	public List<String> getArtistNames() {
@@ -388,10 +532,14 @@ public class LibraryModel {
 	public List<String> getAlbumTitles() {
 	    List<String> albumTitles = new ArrayList<>();
 	    for (Album a : albums) {
-	        albumTitles.add(a.getTitle());
+	    	if(!albumTitles.contains(a.getTitle())) {
+	    		albumTitles.add(a.getTitle());
+	    	}
 	    }
 	    for (Song s : songs) {
-	        albumTitles.add(s.getAlbum());
+	    	if(!albumTitles.contains(s.getAlbum())) {
+	    		albumTitles.add(s.getAlbum());
+	    	}
 	    }
 	    return albumTitles;
 	}
@@ -400,6 +548,9 @@ public class LibraryModel {
 	public List<String> getPlaylistNames() {
 	    List<String> playlistNames = new ArrayList<>();
 	    for (Playlist p : playlists) {
+	        playlistNames.add(p.getName());
+	    }
+	    for (Playlist p : playlistsAuto) {
 	        playlistNames.add(p.getName());
 	    }
 	    return playlistNames;
@@ -416,77 +567,64 @@ public class LibraryModel {
 	    return favoriteSongs;
 	}
 	
-	// Use stream class to sort and limit (StackOverFlow)
-	public List<Song> getFrequentSongs() {
-		List<Song> frequentSongs = songs.stream()
-				.sorted(Comparator.comparing(Song::getCount).reversed())
-				.limit(10)
-				.collect(Collectors.toList());
-		return new ArrayList<>(frequentSongs);
-	}
-	
-	// return list: shallow copy because song is immutable
-	public List<Song> getRecentlyPlayedSongs() {
-		return new ArrayList<>(recentSongs);
-	}
-
-	
-	///SORTING METHODS (bubblesort)
-	
-	//sort the songs alphabetically by title
-	public List<Song> getSortedSongsByTitle() {
-		List<Song> sortedByTitle = new ArrayList<>(songs);
-		int n = sortedByTitle.size();
+	// bubblesort for sorting algorithm - have all three sorting ways in one method
+	// let user query
+	public List<String> getSortedSongs(String method) {
+		List<Song> sorted = new ArrayList<>(songs);
+		int n = sorted.size();
 		
-		for(int i = 0; i < n-1; i++) {
-			for(int j = 0; j < n-i-1; j++) {
-				if (sortedByTitle.get(j).getTitle().compareToIgnoreCase(sortedByTitle.get(j+1).getTitle()) > 0) {
-					Song tempSong = sortedByTitle.get(j);
-					sortedByTitle.set(j, sortedByTitle.get(j+1));
-					sortedByTitle.set(j+1,  tempSong);
+		switch(method.toLowerCase()) {
+		case "title":
+			//sort the songs alphabetically by title
+			for(int i = 0; i < n-1; i++) {
+				for(int j = 0; j < n-i-1; j++) {
+					if (sorted.get(j).getTitle().compareToIgnoreCase(sorted.get(j+1).getTitle()) > 0) {
+						Song tempSong = sorted.get(j);
+						sorted.set(j, sorted.get(j+1));
+						sorted.set(j+1,  tempSong);
+					}
 				}
 			}
-		}
-		return sortedByTitle;
-	}
-	
-	//sort the songs alphabetically by artist
-	public List<Song> getSortedSongsByArtist() {
-		List<Song> sortedByArtist = new ArrayList<>(songs);
-		int n = sortedByArtist.size();
-		
-		for(int i = 0; i < n-1; i++) {
-			for(int j = 0; j < n-i-1; j++) {
-				if (sortedByArtist.get(j).getArtist().compareToIgnoreCase(sortedByArtist.get(j+1).getArtist()) > 0) {
-					Song tempSong = sortedByArtist.get(j);
-					sortedByArtist.set(j, sortedByArtist.get(j+1));
-					sortedByArtist.set(j+1,  tempSong);
+			break;
+			
+		case "artist":
+			//sort the songs alphabetically by title
+			for(int i = 0; i < n-1; i++) {
+				for(int j = 0; j < n-i-1; j++) {
+					if (sorted.get(j).getArtist().compareToIgnoreCase(sorted.get(j+1).getArtist()) > 0) {
+						Song tempSong = sorted.get(j);
+						sorted.set(j, sorted.get(j+1));
+						sorted.set(j+1,  tempSong);
+					}
 				}
 			}
+			break;
+			
+		case "rating":
+			//sort the songs alphabetically by title
+			for (int i = 0; i < n - 1; i++) {
+	            for (int j = 0; j < n - i - 1; j++) {
+	                if (sorted.get(j).getRating().getStars() > sorted.get(j+1).getRating().getStars()) {
+	                    Song temp = sorted.get(j);
+	                    sorted.set(j, sorted.get(j+1));
+	                    sorted.set(j+1, temp);
+	                }
+	            }
+	        }
+			break;
+			
+		default:
+			return new ArrayList<>();
 		}
-		return sortedByArtist;
-	}
-	
 		
-	//sort songs by rating in  ascending order
-	public List<Song> getSortedSongsByRating() {
-		List<Song> sortedByRating = new ArrayList<>(songs);
-		int n = sortedByRating.size();
+		List<String> sortedStr = new ArrayList<>();
 		
-		for (int i = 0; i < n - 1; i++) {
-            for (int j = 0; j < n - i - 1; j++) {
-                if (sortedByRating.get(j).getRating().getStars() > sortedByRating.get(j+1).getRating().getStars()) {
-          
-                    Song temp = sortedByRating.get(j);
-                    sortedByRating.set(j, sortedByRating.get(j+1));
-                    sortedByRating.set(j+1, temp);
-                }
-            }
-        }
-        return sortedByRating;
+		for (Song s : sorted) {
+			sortedStr.add(s.toString());
+		}
 		
-	}
-		
+		return sortedStr;
+	}	
 		
 	//use iterator to shuffle songs
     public Iterator<Song> shuffleLibrary() {
@@ -520,7 +658,10 @@ public class LibraryModel {
     public String removeAlbum(String title, String artist) {
         for (Album album : albums) {
             if (album.getTitle().equalsIgnoreCase(title) && album.getArtist().equalsIgnoreCase(artist)) {
-                albums.remove(album);
+            	for (Song s : album.getSongs()) {
+            		songs.remove(s);
+				}
+            	albums.remove(album);
                 return "Removed the album " + title + " by " + artist;
             }
         }
@@ -531,9 +672,90 @@ public class LibraryModel {
     public boolean albumInLibrary(Album album) {
     	return albums.contains(album);
     }
-
-
 	
+	// genre playlist
+	public List<Playlist> getAutomaticPlaylists() {
+		playlistsAuto.clear();
+		
+		// HashMap with genre, number of songs order
+		HashMap<String, Integer> numSongsGenre = new HashMap<String, Integer>();
+		List<Playlist> nonUserP = new ArrayList<>();
+				
+		Playlist pRecent = new Playlist("Recently Played Songs");
+		Playlist pFrequent = new Playlist("Frequently Played Songs");
+		Playlist pFav = new Playlist("Favorite Songs");
+		Playlist pTop = new Playlist("Top Rated Songs");
+		
+		for (Song s : songs) {
+	        if (s.isFavorite()) {
+	            pFav.addSong(s);
+	        }
+	        if (s.getRating() == Rating.FOUR || s.getRating() == Rating.FIVE) {
+	            pTop.addSong(s);
+	        }
+	    }
+		
+		List<Song> frequentSongsCount = new ArrayList<>();
+		
+		for (Song s : songs) {
+			if (s.getCount() >= 1) {
+				frequentSongsCount.add(s);
+			}
+		}
+		
+		// Use stream class to sort and limit (StackOverFlow)
+		List<Song> frequentSongs = frequentSongsCount.stream()
+				.sorted(Comparator.comparing(Song::getCount).reversed())
+				.limit(10)
+				.collect(Collectors.toList());
+		
+	    for (Song s : frequentSongs) {
+	    	pFrequent.addSong(s);
+	    }
+	    
+		for (Song s : recentSongs) {
+	    	pRecent.addSong(s);
+	    }
+		
+	    nonUserP.add(pFrequent);
+	    nonUserP.add(pRecent);
+		nonUserP.add(pTop);
+		nonUserP.add(pFav);		
+		
+		// populate hashmap with genre and number of songs with said genre
+		for (Song s : songs) {
+			String albumTitle = s.getAlbum();
+			for (Album a: albums) {
+				if (a.getTitle().equals(albumTitle)) {
+					if (!numSongsGenre.containsKey(a.getGenre())) {
+						numSongsGenre.put(a.getGenre(), 1);
+					}
+					else {
+						numSongsGenre.put(a.getGenre(), numSongsGenre.get(a.getGenre()) + 1);
+					}
+				}
+			}
+		}
+		
+		// use entry to get key:value element, create playlists using genre name
+		for (Entry<String, Integer> entry : numSongsGenre.entrySet()) {
+			if(entry.getValue() >= 10) {
+				Playlist genreP = new Playlist(entry.getKey());
+				for (Song s : songs) {
+					String albumTitle = s.getAlbum();
+					for (Album a : albums) {
+						if (a.getTitle().equals(albumTitle) && a.getGenre().equals(genreP.getName())) {
+							genreP.addSong(s);
+						}
+					}
+				}
+				// since there are more than one possible playlists, add them to a bigger list
+				nonUserP.add(genreP);
+			}
+		}
+		playlistsAuto.addAll(nonUserP);
+		return Collections.unmodifiableList(nonUserP);
+	}
 	
 	
 	
