@@ -64,17 +64,12 @@ public class LibraryView {
             	if (loaded != null) {
             	    model.addSong(loaded);
             	}
-
-            	/*
-                String[] parts = songStr.split(" - | \\| ");
-                if (parts.length == 3) {
-                    String title = parts[0].trim();
-                    String artist = parts[1].trim();
-                    model.addSong(title, musicStore, artist);
-                }
-                */
             	
             }
+            
+       	 // 🔽 Load user's saved playlists
+            List<Playlist> loadedPlaylists = userManager.loadUserPlaylists(username);
+            model.addPlaylists(loadedPlaylists);
 
             System.out.println("\n✅ Login successful! Welcome, " + username + "!");
             return true;
@@ -132,6 +127,8 @@ public class LibraryView {
                 .toList();
                 */
             userManager.saveUserLibrary(currentUser.getUsername(), songStrings);
+            userManager.saveUserPlaylists(currentUser.getUsername(), model.getUserPlaylists());
+
         }
         currentUser = null;
         model.clearLibrary(); // Clear in-memory data
@@ -247,15 +244,12 @@ public class LibraryView {
                             .toList();
                             */
                         userManager.saveUserLibrary(currentUser.getUsername(), songStrings);
+                        userManager.saveUserPlaylists(currentUser.getUsername(), model.getUserPlaylists());
+
                     }
                     System.out.println("\n👋 Thank you for using the Music Library!");
                     return;
                 }
-
-                
-                
-                
-                
                 default -> System.out.println("\n❌ Invalid choice. Please try again.");
             }
 

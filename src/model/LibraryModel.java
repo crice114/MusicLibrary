@@ -784,6 +784,17 @@ public class LibraryModel {
 	    }
 	}
 
+	public void addPlaylists(List<Playlist> loadedPlaylists) {
+	    for (Playlist p : loadedPlaylists) {
+	        playlists.add(p); // Only user-created playlists
+	    }
+	}
+	
+	public List<Playlist> getUserPlaylists() {
+	    return Collections.unmodifiableList(playlists);
+	}
+
+
 	
 	
 	// Load MusicStore info for use

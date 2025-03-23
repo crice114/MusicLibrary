@@ -90,6 +90,10 @@ public class UserManager {
      * Checks if the user exists in users.txt
      */
     public boolean userExists(String username) {
+    	
+    	File file = new File(USER_FILE);
+        if (!file.exists()) return false; // prevent unnecessary stack trace
+        
         try (BufferedReader reader = new BufferedReader(new FileReader(USER_FILE))) {
             String line;
             while ((line = reader.readLine()) != null) {
@@ -122,6 +126,50 @@ public class UserManager {
         }
         return null;
     }
+    
+    public void saveUserPlaylists(String username, List<Playlist> playlists) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(username + "_playlists.txt"))) {
+            for (Playlist p : playlists) {
+                writer.write(p.getName());
+                for (Song s : p.getSongs()) {
+                    writer.write(" || " + s.toFileString());
+                }
+                writer.newLine();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    
+    public List<Playlist> loadUserPlaylists(String username) {
+        List<Playlist> playlists = new ArrayList<>();
+        File file = new File(username + "_playlists.txt");
+
+        if (!file.exists()) return playlists;
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] tokens = line.split(" \\|\\| ");
+                if (tokens.length >= 1) {
+                    Playlist playlist = new Playlist(tokens[0]);
+                    for (int i = 1; i < tokens.length; i++) {
+                        Song s = Song.fromFileString(tokens[i]);
+                        if (s != null) {
+                            playlist.addSong(s);
+                        }
+                    }
+                    playlists.add(playlist);
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return playlists;
+    }
+
+
 }
 
 
