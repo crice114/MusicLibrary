@@ -74,4 +74,36 @@ public final class Song {
     public String toString() {
         return title + " - " + artist + " | " + album;
     }
+    
+    //added 3/22
+    public String toFileString() {
+    	return title + " - " + artist + " | " + album + " | " + rating.getStars() + " | " + isFavorite() + " | " + getCount();
+
+    }
+    //added 3/22
+    public static Song fromFileString(String line) {
+        try {
+            // Format: Title - Artist | Album | Rating | Favorite | Count
+            String[] parts = line.split(" - | \\| ");
+            if (parts.length != 6) return null;
+
+            String title = parts[0].trim();
+            String artist = parts[1].trim();
+            String album = parts[2].trim();
+            int rating = Integer.parseInt(parts[3].trim());
+
+            // Ensure rating is within bounds
+            if (rating < 0 || rating >= Rating.values().length) return null;
+
+            boolean favorite = Boolean.parseBoolean(parts[4].trim());
+            int count = Integer.parseInt(parts[5].trim());
+
+            return new Song(title, artist, album, Rating.values()[rating], favorite, count);
+        } catch (Exception e) {
+            // Handle any parsing error gracefully
+            return null;
+        }
+    }
+
+
 }

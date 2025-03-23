@@ -37,8 +37,7 @@ public class LibraryView {
         this.musicStore = musicStore;
         this.scanner = new Scanner(System.in);
     }
-
-    // LOGIN METHOD
+   
     private boolean login() {
         System.out.println("\n🔐 Please log in to access your music library.");
 
@@ -48,10 +47,35 @@ public class LibraryView {
         System.out.print("🔑 Password: ");
         String password = scanner.nextLine().trim();
 
-        // Check if the user exists and password matches
-        User user = model.checkUser(username);
-        if (user != null && Password.verifyPassword(password, user.getPassword())) {
-            this.currentUser = user;  // Set the logged-in user
+        UserManager userManager = new UserManager();
+
+        if (userManager.loginUser(username, password)) {
+            String hashedPassword = userManager.getHashedPassword(username);
+            this.currentUser = new User(username, hashedPassword);
+            model.addUser(currentUser); // Add to in-memory user list
+
+            // Clear any previous session data
+            model.clearLibrary();
+
+            // Load this user's saved library
+            List<String> savedSongs = userManager.loadUserLibrary(username);
+            for (String songStr : savedSongs) {
+            	Song loaded = Song.fromFileString(songStr);
+            	if (loaded != null) {
+            	    model.addSong(loaded);
+            	}
+
+            	/*
+                String[] parts = songStr.split(" - | \\| ");
+                if (parts.length == 3) {
+                    String title = parts[0].trim();
+                    String artist = parts[1].trim();
+                    model.addSong(title, musicStore, artist);
+                }
+                */
+            	
+            }
+
             System.out.println("\n✅ Login successful! Welcome, " + username + "!");
             return true;
         } else {
@@ -60,15 +84,18 @@ public class LibraryView {
         }
     }
 
-    // CREATE NEW USER
+    
+    
+    
+    
     private void createUser() {
         System.out.println("\n🔑 Create a new user account:");
 
         System.out.print("👤 Enter username: ");
         String username = scanner.nextLine().trim();
 
-        // Check if the username already exists
-        if (model.checkUser(username) != null) {
+        UserManager userManager = new UserManager();
+        if (userManager.userExists(username)) {
             System.out.println("\n❌ Username already taken. Please choose another.");
             return;
         }
@@ -76,21 +103,42 @@ public class LibraryView {
         System.out.print("🔑 Enter password: ");
         String password = scanner.nextLine().trim();
 
-        // Hash the password before saving
-        String hashedPassword = Password.hashPassword(password);
+        // Register user using UserManager (handles salting + hashing + file write)
+        boolean success = userManager.registerUser(username, password);
 
-        // Create and save the new user
-        User newUser = new User(username, hashedPassword);
-        model.addUser(newUser);
-        System.out.println("\n✅ User created successfully! You can now log in.");
+        if (success) {
+            // Store User in model memory with hashed password
+            String hashedPassword = userManager.getHashedPassword(username);
+            User newUser = new User(username, hashedPassword);
+            model.addUser(newUser);
+
+            System.out.println("\n✅ User created successfully! You can now log in.");
+        } else {
+            System.out.println("\n❌ Failed to create user. Try again.");
+        }
     }
 
-    // LOGOUT METHOD
+
+
     private void logout() {
-        currentUser = null;  // Clear the logged-in user
+        if (currentUser != null) {
+            UserManager userManager = new UserManager();
+            List<String> songStrings = model.getSongs().stream()
+                    .map(Song::toFileString) // Assumes Song.toString() gives "Title - Artist | Album"
+                    .toList();
+            /*
+            List<String> songStrings = model.getSongs().stream()
+                .map(Song::toString) // Assumes Song.toString() gives "Title - Artist | Album"
+                .toList();
+                */
+            userManager.saveUserLibrary(currentUser.getUsername(), songStrings);
+        }
+        currentUser = null;
+        model.clearLibrary(); // Clear in-memory data
         System.out.println("\n🔒 You have been logged out.");
     }
 
+    /////////////////////////////////////////////////////////////////////////
     // MENU OPTION
     public void start() {
         boolean loggedIn = false;
@@ -186,10 +234,28 @@ public class LibraryView {
                     loggedIn = false; // Set loggedIn to false to return to the login screen
                     break;  // Exit to login screen
                 }
+                
                 case 29 -> {
+                    if (currentUser != null) {
+                        UserManager userManager = new UserManager();
+                        List<String> songStrings = model.getSongs().stream()
+                                .map(Song::toFileString)
+                                .toList();
+                        /*
+                        List<String> songStrings = model.getSongs().stream()
+                            .map(Song::toString)
+                            .toList();
+                            */
+                        userManager.saveUserLibrary(currentUser.getUsername(), songStrings);
+                    }
                     System.out.println("\n👋 Thank you for using the Music Library!");
-                    return; // End the program
+                    return;
                 }
+
+                
+                
+                
+                
                 default -> System.out.println("\n❌ Invalid choice. Please try again.");
             }
 

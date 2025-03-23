@@ -1,3 +1,4 @@
+
 package model;
 public final class User {
 	// INSTANCE VARIABLES
