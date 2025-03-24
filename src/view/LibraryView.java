@@ -329,7 +329,6 @@ public class LibraryView {
         }
     }
 
-    // #4 SEARCH ALBUM
     private void searchAlbumLibrary() {
         System.out.print("\n🔍 Enter album title or artist: ");
         String title = scanner.nextLine();
@@ -337,7 +336,6 @@ public class LibraryView {
         displaySearchResults(results, "album");
     }
 
-    // #5 SEARCH BY ARTIST
     private void searchByArtistLibrary() {
         System.out.print("\n🔍 Enter artist name: ");
         String artistName = scanner.nextLine();
@@ -364,7 +362,6 @@ public class LibraryView {
         }
     }
     
- // #7 SEARCH BY GENRE
     private void searchByGenreLibrary() {
         System.out.print("\n🔍 Enter genre: ");
         String genre = scanner.nextLine().trim(); // Get the genre input
@@ -383,7 +380,6 @@ public class LibraryView {
         }
     }
 
-    // #1 ADD SONG
     private void addSong() {
         System.out.print("\n🎵 Enter song title to add: ");
         String title = scanner.nextLine();
@@ -404,7 +400,6 @@ public class LibraryView {
         }
     }
     
-    // #2 PLAY SONG
     private void playSong() {
         System.out.print("\n🎵 Enter song title to play: ");
         String title = scanner.nextLine();
@@ -425,7 +420,6 @@ public class LibraryView {
         }
     }
 
-    // #2 ADD ALBUM
     private void addAlbum() {
         System.out.print("\n📀 Enter album title to add: ");
         String title = scanner.nextLine();
@@ -446,7 +440,6 @@ public class LibraryView {
         }
     }
 
-    // #3 SEARCH SONG + REQUEST ALBUM INFO
     private void searchSong() {
         System.out.print("\n🔍 Enter song title or artist: ");
         String title = scanner.nextLine();
@@ -479,7 +472,6 @@ public class LibraryView {
         }
     }
 
-    // #4 SEARCH ALBUM
     private void searchAlbum() {
         System.out.print("\n🔍 Enter album title or artist: ");
         String title = scanner.nextLine();
@@ -487,7 +479,6 @@ public class LibraryView {
         displaySearchResults(results, "album");
     }
 
-    // #5 SEARCH BY ARTIST
     private void searchByArtist() {
         System.out.print("\n🔍 Enter artist name: ");
         String artistName = scanner.nextLine();
@@ -514,7 +505,6 @@ public class LibraryView {
         }
     }
     
- // #7 SEARCH BY GENRE
     private void searchByGenre() {
         System.out.print("\n🔍 Enter genre: ");
         String genre = scanner.nextLine().trim(); // Get the genre input
@@ -534,7 +524,6 @@ public class LibraryView {
     }
     
     
-    // #6 SEARCH PLAYLIST
     private void searchPlaylist() {
     	// Ensure all auto-generated playlists are up to date
         model.getAutomaticPlaylists();
@@ -565,7 +554,6 @@ public class LibraryView {
         }
     }
 
-    // #7 CREATE PLAYLIST
     private void createPlaylist() {
         System.out.print("\n📜 Enter playlist name: ");
         String name = scanner.nextLine().trim();  // Trim input to avoid leading/trailing spaces
@@ -579,7 +567,6 @@ public class LibraryView {
         System.out.println(result);
     }
 
- // #8 ADD SONG TO PLAYLIST
     private void addSongToPlaylist() {
     	// Ensure all auto-generated playlists are up to date
         model.getAutomaticPlaylists();
@@ -604,8 +591,6 @@ public class LibraryView {
         System.out.println(result);
     }
 
-    // #9 REMOVE SONG FROM PLLAYLIST
- // #9 REMOVE SONG FROM PLAYLIST
     private void removeSongFromPlaylist() {
     	// Ensure all auto-generated playlists are up to date
         model.getAutomaticPlaylists();
@@ -630,7 +615,6 @@ public class LibraryView {
         System.out.println(result);
     }
 
-    // #10 RATE SONG
     private void rateSong() {
         System.out.print("\n⭐ Enter song title to rate: ");
         String title = scanner.nextLine();
@@ -647,7 +631,6 @@ public class LibraryView {
         System.out.println(result);
     }
 
-    // #11 MARK SONG AS FAVORITE
     private void markSongAsFavorite() {
         System.out.print("\n💖 Enter song title to mark as favorite: ");
         String title = scanner.nextLine();
@@ -656,26 +639,22 @@ public class LibraryView {
         System.out.println(result);
     }
 
-    // #12 LIST SONGS
     private void listSongs() {
         List<String> songs = model.getSongTitles();
         displayListResults(songs, "songs");
     }
 
-    // #13 LIST ARTISTS
     private void listArtists() {
         List<String> artists = model.getArtistNames();
         displayListResults(artists, "artists");
         
     }
 
-    // #14 LIST ALBUMS
     private void listAlbums() {
         List<String> albums = model.getAlbumTitles();
         displayListResults(albums, "albums");
     }
 
-    // #15 LIST PLAYLIST
     private void listPlaylists() {
         // Make sure the automatic playlists (Top Rated, Favorite, Genre-based) are generated
         model.getAutomaticPlaylists();
@@ -690,7 +669,6 @@ public class LibraryView {
         }
     }
 
-    // #16 LIST FAVORITE SONGS
     private void listFavoriteSongs() {
         List<Song> favorites = model.getFavoriteSongs();
         if (favorites.isEmpty()) {
@@ -781,7 +759,7 @@ public class LibraryView {
         displayListResults(songs, "sorted songs by " + method + " 🗂️");
     }
     
-    //// shuffle a playlist
+    // shuffle a playlist
     private void shufflePlaylist() {
         System.out.print("\n🔀 Enter playlist name to shuffle: ");
         String playlistName = scanner.nextLine();
@@ -797,8 +775,6 @@ public class LibraryView {
             System.out.println("🎵 " + shuffledSongs.next().getTitle());
         }
     }
-
-
 
     // MAIN
     public static void main(String[] args) throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {

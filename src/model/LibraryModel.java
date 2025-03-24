@@ -729,13 +729,14 @@ public class LibraryModel {
 		return Collections.unmodifiableList(nonUserP);
 	}
 
+	// clear lib for each user
 	public void clearLibrary() {
 	    songs.clear();
 	    albums.clear();
 	    playlists.clear();
 	}
 	
-	///update3/22
+	// Methods for loading user info
 	public void addSong(Song song, String genre, int year) {
 	    if (!songs.contains(song)) {
 	        songs.add(song);
@@ -753,7 +754,7 @@ public class LibraryModel {
 	    if (!albumExists) {
 	        // You can try loading it from the MusicStore if needed
 	        // For now, we assume only song is saved, so album metadata may not be reloaded
-	    	albums.add(new Album(song.getAlbum(), song.getArtist(), genre, year)); // placeholder genre/year
+	    	albums.add(new Album(song.getAlbum(), song.getArtist(), genre, year));
 	    }
 	}
 

@@ -77,12 +77,12 @@ public final class Song {
         return title + " - " + artist + " | " + album;
     }
     
-    //added 3/22
+    // to string for user data (includes more info)
     public String toFileString() {
     	return title + " - " + artist + " | " + album + " | " + rating.getStars() + " | " + isFavorite() + " | " + getCount();
 
     }
-    //added 3/22
+    // retrieve song from file
     public static Song fromFileString(String line) {
         // Format: Title - Artist | Album | Rating | Favorite | Count
         String[] parts = line.split(" - | \\| ");

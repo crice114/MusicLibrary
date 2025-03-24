@@ -15,6 +15,7 @@ import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 
 public class PasswordManager {
+	// Salting constants
     private static final int SALT_LENGTH = 16;
     private static final int ITERATIONS = 65536;
     private static final int KEY_LENGTH = 256;
@@ -28,6 +29,7 @@ public class PasswordManager {
         return saltStr + ":" + hashStr;
     }
 
+    // verify password bool
     public static boolean verifyPassword(String password, String saltStr, String storedHash) {
         try {
             byte[] salt = Base64.getDecoder().decode(saltStr);

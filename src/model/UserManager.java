@@ -42,6 +42,7 @@ public class UserManager {
     public boolean loginUser(String username, String password) throws FileNotFoundException, IOException {
         try (BufferedReader reader = new BufferedReader(new FileReader(USER_FILE))) {
             String line;
+            //username:hash
             while ((line = reader.readLine()) != null) {
                 if (line.startsWith(username + ":")) {
                     String[] parts = line.split(":");
@@ -68,6 +69,7 @@ public class UserManager {
             return library;
         }
 
+        // library txt stores songs
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             String song;
             while ((song = reader.readLine()) != null) {
@@ -81,6 +83,7 @@ public class UserManager {
      * Saves user's current library to disk
      * @throws IOException 
      */
+    // save it inside the same file
     public void saveUserLibrary(String username, List<String> library) throws IOException {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter("data/" + username + "_library.txt"))) {
             for (String song : library) {
@@ -115,6 +118,7 @@ public class UserManager {
      * Gets the raw hashed password (salt:hash) for a given user
      * @throws IOException 
      */
+    // hash method
     public String getHashedPassword(String username) throws IOException {
         try (BufferedReader reader = new BufferedReader(new FileReader(USER_FILE))) {
             String line;
@@ -136,6 +140,7 @@ public class UserManager {
             for (Playlist p : playlists) {
                 writer.write(p.getName());
                 for (Song s : p.getSongs()) {
+                	// playlists in format name || songs
                     writer.write(" || " + s.toFileString());
                 }
                 writer.newLine();
@@ -150,6 +155,7 @@ public class UserManager {
 
         if (!file.exists()) return playlists;
 
+        // store playlist in name || songs format
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             String line;
             while ((line = reader.readLine()) != null) {
