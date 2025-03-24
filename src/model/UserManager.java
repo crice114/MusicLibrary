@@ -1,17 +1,27 @@
+/* UserManager.java
+ * This Java file include the UserManager class.
+ * It incorporates the program functionality and 
+ * connects with the View and MusicStore to retrieve
+ * and return information. */
 
 
 package model;
 
 import java.io.*;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 import java.util.*;
 
 public class UserManager {
-    private static final String USER_FILE = "users.txt";
+    private static final String USER_FILE = "data/users.txt";
 
+    // Exceptions!!! thrown when creating method
     /**
      * Registers a new user by hashing their password and saving it to users.txt
+     * @throws InvalidKeySpecException 
+     * @throws NoSuchAlgorithmException 
      */
-    public boolean registerUser(String username, String password) {
+    public boolean registerUser(String username, String password) throws NoSuchAlgorithmException, InvalidKeySpecException, IOException {
         if (userExists(username)) {
             return false;
         }
@@ -21,16 +31,15 @@ public class UserManager {
             String hashedPassword = PasswordManager.hashPassword(password);
             writer.write(username + ":" + hashedPassword + "\n");
             return true;
-        } catch (IOException e) {
-            e.printStackTrace();
-            return false;
         }
     }
 
     /**
      * Verifies login credentials against stored salted hash
+     * @throws IOException 
+     * @throws FileNotFoundException 
      */
-    public boolean loginUser(String username, String password) {
+    public boolean loginUser(String username, String password) throws FileNotFoundException, IOException {
         try (BufferedReader reader = new BufferedReader(new FileReader(USER_FILE))) {
             String line;
             while ((line = reader.readLine()) != null) {
@@ -43,18 +52,17 @@ public class UserManager {
                     }
                 }
             }
-        } catch (IOException e) {
-            e.printStackTrace();
         }
-        return false;
+		return false;
     }
 
     /**
      * Loads user's saved library from disk
+     * @throws IOException 
      */
-    public List<String> loadUserLibrary(String username) {
+    public List<String> loadUserLibrary(String username) throws IOException {
         List<String> library = new ArrayList<>();
-        File file = new File(username + "_library.txt");
+        File file = new File("data/" + username + "_library.txt");
 
         if (!file.exists()) {
             return library;
@@ -65,31 +73,29 @@ public class UserManager {
             while ((song = reader.readLine()) != null) {
                 library.add(song);
             }
-        } catch (IOException e) {
-            e.printStackTrace();
         }
-
         return library;
     }
 
     /**
      * Saves user's current library to disk
+     * @throws IOException 
      */
-    public void saveUserLibrary(String username, List<String> library) {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(username + "_library.txt"))) {
+    public void saveUserLibrary(String username, List<String> library) throws IOException {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter("data/" + username + "_library.txt"))) {
             for (String song : library) {
                 writer.write(song);
                 writer.newLine();
             }
-        } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 
     /**
      * Checks if the user exists in users.txt
+     * @throws IOException 
+     * @throws FileNotFoundException 
      */
-    public boolean userExists(String username) {
+    public boolean userExists(String username) throws FileNotFoundException, IOException {
     	
     	File file = new File(USER_FILE);
         if (!file.exists()) return false; // prevent unnecessary stack trace
@@ -101,16 +107,15 @@ public class UserManager {
                     return true;
                 }
             }
-        } catch (IOException e) {
-            e.printStackTrace();
         }
         return false;
     }
 
     /**
      * Gets the raw hashed password (salt:hash) for a given user
+     * @throws IOException 
      */
-    public String getHashedPassword(String username) {
+    public String getHashedPassword(String username) throws IOException {
         try (BufferedReader reader = new BufferedReader(new FileReader(USER_FILE))) {
             String line;
             while ((line = reader.readLine()) != null) {
@@ -121,14 +126,13 @@ public class UserManager {
                     }
                 }
             }
-        } catch (IOException e) {
-            e.printStackTrace();
         }
         return null;
     }
     
-    public void saveUserPlaylists(String username, List<Playlist> playlists) {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(username + "_playlists.txt"))) {
+    // writes for playlists
+    public void saveUserPlaylists(String username, List<Playlist> playlists) throws IOException {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter("data/" + username + "_playlists.txt"))) {
             for (Playlist p : playlists) {
                 writer.write(p.getName());
                 for (Song s : p.getSongs()) {
@@ -136,14 +140,13 @@ public class UserManager {
                 }
                 writer.newLine();
             }
-        } catch (IOException e) {
-            e.printStackTrace();
         }
     }
     
-    public List<Playlist> loadUserPlaylists(String username) {
+    // writes for playlists
+    public List<Playlist> loadUserPlaylists(String username) throws FileNotFoundException, IOException {
         List<Playlist> playlists = new ArrayList<>();
-        File file = new File(username + "_playlists.txt");
+        File file = new File("data/" + username + "_playlists.txt");
 
         if (!file.exists()) return playlists;
 
@@ -162,8 +165,6 @@ public class UserManager {
                     playlists.add(playlist);
                 }
             }
-        } catch (IOException e) {
-            e.printStackTrace();
         }
 
         return playlists;

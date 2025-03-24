@@ -14,7 +14,9 @@ class MusicStoreTest {
 	MusicStore musicStore = new MusicStore();
 	
 	Song song1 = new Song("These Chains", "Toto", "The Seventh One", Rating.ZERO, false, 0);
-    Album album1 = new Album("The Seventh One", "Toto", "Rock", 1988);
+    Song song2 = new Song("Daydreamer", "Adele", "19", Rating.ZERO, false, 0);
+	Album album1 = new Album("The Seventh One", "Toto", "Rock", 1988);
+    Album album2 = new Album("19", "Adele", "Pop", 2008);
     Artist artist1 = new Artist("Toto");
     Artist artist2 = new Artist("Toto");
 	
@@ -28,6 +30,13 @@ class MusicStoreTest {
 		
 		assertEquals(1, resTitle.size());
 		assertEquals(1, resArtist.size());
+	}
+	
+	@Test
+	void testGetSongsByGenre() throws IOException {
+		musicStore.addSong(song2);
+		musicStore.addAlbum(album2);
+		ArrayList<Song> resGenre = musicStore.getSongsByGenre(album2.getGenre());
 	}
 	
 	@Test
