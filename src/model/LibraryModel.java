@@ -756,7 +756,45 @@ public class LibraryModel {
 		playlistsAuto.addAll(nonUserP);
 		return Collections.unmodifiableList(nonUserP);
 	}
+	//////////////////////////////////update3/22
+	public void clearLibrary() {
+	    songs.clear();
+	    albums.clear();
+	    playlists.clear();
+	}
 	
+	///update3/22
+	public void addSong(Song song) {
+	    if (!songs.contains(song)) {
+	        songs.add(song);
+	    }
+	    
+	    boolean albumExists = false;
+	    for (Album a : albums) {
+	        if (a.getTitle().equalsIgnoreCase(song.getAlbum())) {
+	            albumExists = true;
+	            break;
+	        }
+	    }
+	    
+	    if (!albumExists) {
+	        // You can try loading it from the MusicStore if needed
+	        // For now, we assume only song is saved, so album metadata may not be reloaded
+	        albums.add(new Album(song.getAlbum(), song.getArtist(), "Unknown", 0)); // placeholder genre/year
+	    }
+	}
+
+	public void addPlaylists(List<Playlist> loadedPlaylists) {
+	    for (Playlist p : loadedPlaylists) {
+	        playlists.add(p); // Only user-created playlists
+	    }
+	}
+	
+	public List<Playlist> getUserPlaylists() {
+	    return Collections.unmodifiableList(playlists);
+	}
+
+
 	
 	
 	// Load MusicStore info for use

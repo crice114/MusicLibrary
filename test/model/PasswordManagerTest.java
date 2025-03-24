@@ -1,9 +1,8 @@
+
+
 package model;
 
-
-
-
-import  org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class PasswordManagerTest {
@@ -11,11 +10,16 @@ public class PasswordManagerTest {
     @Test
     void testHashAndVerifyPassword() {
         String password = "password321";
-        String hash = PasswordManager.hashPassword(password);
+        String stored = PasswordManager.hashPassword(password); // salt:hash
+        String[] parts = stored.split(":");
+        assertEquals(2, parts.length, "Hash should contain salt and hash separated by ':'");
 
-        assertNotNull(hash, "hashed password should not be null");
-        assertTrue(PasswordManager.verifyPassword(password, hash), "correct password should verify");
-        assertFalse(PasswordManager.verifyPassword("wrongPassword", hash), "incorrect password should fail verification");
+        String salt = parts[0];
+        String hash = parts[1];
+
+        assertNotNull(stored, "hashed password should not be null");
+        assertTrue(PasswordManager.verifyPassword(password, salt, hash), "correct password should verify");
+        assertFalse(PasswordManager.verifyPassword("wrongPassword", salt, hash), "incorrect password should fail verification");
     }
 
     @Test
@@ -30,8 +34,9 @@ public class PasswordManagerTest {
     @Test
     void testMalformedStoredHash() {
         String password = "wrong";
-        String badStoredHash = "not_a_valid_hash_format";
+        String badSalt = "bad_salt";
+        String badHash = "bad_hash";
 
-        assertFalse(PasswordManager.verifyPassword(password, badStoredHash), "wrong hash should return false");
+        assertFalse(PasswordManager.verifyPassword(password, badSalt, badHash), "Malformed salt or hash should return false");
     }
 }
