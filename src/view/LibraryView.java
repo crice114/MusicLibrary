@@ -157,11 +157,7 @@ public class LibraryView {
             List<String> songStrings = model.getSongs().stream()
                     .map(Song::toFileString) // Assumes Song.toString() gives "Title - Artist | Album"
                     .toList();
-            /*
-            List<String> songStrings = model.getSongs().stream()
-                .map(Song::toString) // Assumes Song.toString() gives "Title - Artist | Album"
-                .toList();
-                */
+
             userManager.saveUserLibrary(currentUser.getUsername(), songStrings);
             userManager.saveUserPlaylists(currentUser.getUsername(), model.getUserPlaylists());
 
