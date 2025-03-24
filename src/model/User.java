@@ -1,3 +1,6 @@
+/* User.java
+ * This Java file include the User class.
+ * It uses getters to get Username and Password. */
 
 package model;
 public final class User {

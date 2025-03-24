@@ -69,7 +69,7 @@ public class LibraryModel {
 	            results.add(s);
 	        }
 	    }
-	    return results;
+	    return new ArrayList<>(results);
 	}
 	
 	// Create new ArrayList with found albums
@@ -80,7 +80,7 @@ public class LibraryModel {
 	            results.add(a);
 	        }
 	    }
-	    return results;
+	    return new ArrayList<>(results);
 	}
 	
     public ArrayList<Song> getSongsByGenre(String genre) {
@@ -93,7 +93,7 @@ public class LibraryModel {
     			}
     		}
     	}
-    	return results;
+    	return new ArrayList<>(results);
     }
 	
 	// Add song to library - check for duplicates and nonexistent.
@@ -256,7 +256,7 @@ public class LibraryModel {
 				songs.remove(song2);
 				songs.add(incCountSong2);  // Deal with songs directly rather than string ArrayList
 				if(recentSongs.size() == 10) {
-					recentSongs.removeLast();
+					recentSongs.pollLast();
 				}
 				recentSongs.remove(incCountSong2);
 				recentSongs.addFirst(incCountSong2);
@@ -525,7 +525,7 @@ public class LibraryModel {
 	        }
 	    }
 	    
-	    return artistNames;
+	    return new ArrayList<>(artistNames);
 	}
 	
 	// Album titles
@@ -541,7 +541,7 @@ public class LibraryModel {
 	    		albumTitles.add(s.getAlbum());
 	    	}
 	    }
-	    return albumTitles;
+	    return new ArrayList<>(albumTitles);
 	}
 
 	// Playlist names
@@ -553,7 +553,7 @@ public class LibraryModel {
 	    for (Playlist p : playlistsAuto) {
 	        playlistNames.add(p.getName());
 	    }
-	    return playlistNames;
+	    return new ArrayList<>(playlistNames);
 	}
 
 	// Favorite Songs
@@ -564,53 +564,25 @@ public class LibraryModel {
 	            favoriteSongs.add(s);
 	        }
 	    }
-	    return favoriteSongs;
+	    return new ArrayList<>(favoriteSongs);
 	}
 	
-	// bubblesort for sorting algorithm - have all three sorting ways in one method
+	// Comparator sorting algorithm - have all three sorting ways in one method
 	// let user query
 	public List<String> getSortedSongs(String method) {
 		List<Song> sorted = new ArrayList<>(songs);
-		int n = sorted.size();
 		
 		switch(method.toLowerCase()) {
 		case "title":
-			//sort the songs alphabetically by title
-			for(int i = 0; i < n-1; i++) {
-				for(int j = 0; j < n-i-1; j++) {
-					if (sorted.get(j).getTitle().compareToIgnoreCase(sorted.get(j+1).getTitle()) > 0) {
-						Song tempSong = sorted.get(j);
-						sorted.set(j, sorted.get(j+1));
-						sorted.set(j+1,  tempSong);
-					}
-				}
-			}
+			Collections.sort(sorted, Song.titleFirstComparator());
 			break;
-			
+		
 		case "artist":
-			//sort the songs alphabetically by title
-			for(int i = 0; i < n-1; i++) {
-				for(int j = 0; j < n-i-1; j++) {
-					if (sorted.get(j).getArtist().compareToIgnoreCase(sorted.get(j+1).getArtist()) > 0) {
-						Song tempSong = sorted.get(j);
-						sorted.set(j, sorted.get(j+1));
-						sorted.set(j+1,  tempSong);
-					}
-				}
-			}
+			Collections.sort(sorted, Song.artistFirstComparator());
 			break;
-			
+	
 		case "rating":
-			//sort the songs alphabetically by title
-			for (int i = 0; i < n - 1; i++) {
-	            for (int j = 0; j < n - i - 1; j++) {
-	                if (sorted.get(j).getRating().getStars() > sorted.get(j+1).getRating().getStars()) {
-	                    Song temp = sorted.get(j);
-	                    sorted.set(j, sorted.get(j+1));
-	                    sorted.set(j+1, temp);
-	                }
-	            }
-	        }
+			Collections.sort(sorted, Song.ratingFirstComparator());
 			break;
 			
 		default:
@@ -623,7 +595,7 @@ public class LibraryModel {
 			sortedStr.add(s.toString());
 		}
 		
-		return sortedStr;
+		return new ArrayList<>(sortedStr);
 	}	
 		
 	//use iterator to shuffle songs
@@ -756,7 +728,7 @@ public class LibraryModel {
 		playlistsAuto.addAll(nonUserP);
 		return Collections.unmodifiableList(nonUserP);
 	}
-	//////////////////////////////////update3/22
+
 	public void clearLibrary() {
 	    songs.clear();
 	    albums.clear();
@@ -764,12 +736,13 @@ public class LibraryModel {
 	}
 	
 	///update3/22
-	public void addSong(Song song) {
+	public void addSong(Song song, String genre, int year) {
 	    if (!songs.contains(song)) {
 	        songs.add(song);
 	    }
-	    
+	  
 	    boolean albumExists = false;
+	    
 	    for (Album a : albums) {
 	        if (a.getTitle().equalsIgnoreCase(song.getAlbum())) {
 	            albumExists = true;
@@ -780,7 +753,7 @@ public class LibraryModel {
 	    if (!albumExists) {
 	        // You can try loading it from the MusicStore if needed
 	        // For now, we assume only song is saved, so album metadata may not be reloaded
-	        albums.add(new Album(song.getAlbum(), song.getArtist(), "Unknown", 0)); // placeholder genre/year
+	    	albums.add(new Album(song.getAlbum(), song.getArtist(), genre, year)); // placeholder genre/year
 	    }
 	}
 

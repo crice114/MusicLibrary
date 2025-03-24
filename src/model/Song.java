@@ -7,6 +7,8 @@
 
 package model;
 
+import java.util.Comparator;
+
 // Final class - values cannot change unless newly defined
 public final class Song {
 	// INSTANCE VARIABLES
@@ -82,28 +84,59 @@ public final class Song {
     }
     //added 3/22
     public static Song fromFileString(String line) {
-        try {
-            // Format: Title - Artist | Album | Rating | Favorite | Count
-            String[] parts = line.split(" - | \\| ");
-            if (parts.length != 6) return null;
+        // Format: Title - Artist | Album | Rating | Favorite | Count
+        String[] parts = line.split(" - | \\| ");
 
-            String title = parts[0].trim();
-            String artist = parts[1].trim();
-            String album = parts[2].trim();
-            int rating = Integer.parseInt(parts[3].trim());
+        if (parts.length != 6) return null;
 
-            // Ensure rating is within bounds
-            if (rating < 0 || rating >= Rating.values().length) return null;
+        String title = parts[0].trim();
+        String artist = parts[1].trim();
+        String album = parts[2].trim();
+        int rating = Integer.parseInt(parts[3].trim());
 
-            boolean favorite = Boolean.parseBoolean(parts[4].trim());
-            int count = Integer.parseInt(parts[5].trim());
+        // Ensure rating is within bounds
+        if (rating < 0 || rating >= Rating.values().length) return null;
 
-            return new Song(title, artist, album, Rating.values()[rating], favorite, count);
-        } catch (Exception e) {
-            // Handle any parsing error gracefully
-            return null;
-        }
+        boolean favorite = Boolean.parseBoolean(parts[4].trim());
+        int count = Integer.parseInt(parts[5].trim());
+        
+        return new Song(title, artist, album, Rating.values()[rating], favorite, count);
     }
-
-
+    
+    // Sorting methods (based on strategy.java)
+    public static Comparator<Song> titleFirstComparator() {
+    	return new Comparator<Song>() {
+			public int compare(Song song1, Song song2) {
+				int comp = song1.title.compareTo(song2.title);
+				if(comp == 0)
+					comp = song1.artist.compareTo(song2.artist);
+				return comp;
+			}
+		};
+    }
+    
+    public static Comparator<Song> artistFirstComparator() {
+    	return new Comparator<Song>() {
+			public int compare(Song song1, Song song2) {
+				int comp = song1.artist.compareTo(song2.artist);
+				if(comp == 0)
+					comp = song1.title.compareTo(song2.title);
+				return comp;
+			}
+		};
+    }
+    
+    public static Comparator<Song> ratingFirstComparator() {
+    	return new Comparator<Song>() {
+			public int compare(Song song1, Song song2) {
+				int comp = song1.rating.compareTo(song2.rating);
+				if(comp == 0)
+					comp = song1.title.compareTo(song2.title);
+				if(comp == 0)
+					comp = song1.artist.compareTo(song2.artist);
+				return comp;
+			}
+		};
+    }
+    
 }

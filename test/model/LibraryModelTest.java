@@ -128,6 +128,9 @@ class LibraryModelTest {
 	void testAddAlbum_InStore() throws IOException {
 		library.addAlbum(album2.getTitle(), musicStore, null);
 		assertEquals(1, library.getAlbums().size());
+		
+		library.addAlbum("21", musicStore, "Adele");
+		library.addAlbum("21", musicStore, null);
 	}
 	
 	@Test
@@ -139,10 +142,12 @@ class LibraryModelTest {
 	// Album duplicate
 	@Test
 	void testAddAlbum_Duplicate() throws IOException {
-		library.addAlbum(album2.getTitle(), musicStore, null);
+		library.addAlbum(album2.getTitle(), musicStore, album2.getArtist());
 		assertEquals(1, library.getAlbums().size());
-		library.addAlbum(album2.getTitle(), musicStore, null);
+		library.addAlbum(album2.getTitle(), musicStore, album2.getArtist());
 		assertEquals(1, library.getAlbums().size());
+		
+		library.addAlbum(album2.getTitle(), musicStore, null);
 	}
 	
 	@Test
@@ -206,6 +211,8 @@ class LibraryModelTest {
 		assertEquals(1, library.getPlaylistByName("Pop").getSongs().size());
 		library.removeFromPlaylist("Pop", "Daydreamer");
 		assertEquals(0, library.getPlaylistByName("Pop").getSongs().size());
+		library.getAutomaticPlaylists();
+		library.getPlaylistByName("Top Rated Songs");
 	}
 	
 	@Test
@@ -213,6 +220,7 @@ class LibraryModelTest {
 		library.createPlaylist("Pop");
 		library.addToPlaylist("Pop", song2.getTitle());
 		library.removeFromPlaylist("Rock", song2.getTitle());
+		library.removeFromPlaylist("Pop", null);
 	}
 	
 	// Get Playlist in and not in library
@@ -240,6 +248,7 @@ class LibraryModelTest {
 	void testRateSong_Favorite() {
 		library.addSong(song2.getTitle(), musicStore, null);
 		library.rateSong(song2.getTitle(), 5);
+		library.setToFavorite(null);
 		assertEquals(Rating.FIVE, library.getSongsByTitleOrArtist(song2.getTitle()).get(0).getRating());
 		assertEquals(true, library.getSongsByTitleOrArtist(song2.getTitle()).get(0).isFavorite());
 	}
@@ -298,7 +307,7 @@ class LibraryModelTest {
 	void testGetAlbumTitles_TitleAndAlbum() {
 		library.addAlbum(album2.getTitle(), musicStore, null);
 		assertEquals(album2.getTitle(), library.getAlbumTitles().get(0));
-		library.addSong("Fire", musicStore, null);
+		library.addSong("Fire", musicStore, "Sons");
 		assertEquals("Sons", library.getAlbumTitles().get(1));
 	}
 	
@@ -430,4 +439,28 @@ class LibraryModelTest {
 		library.addAlbum(album2.getTitle(), musicStore, album2.getArtist());
 		assertEquals(1, library.getAutomaticPlaylists().get(2).getSongs().size());
 	}
+	
+	@Test
+	void testClearLibrary() {
+		library.clearLibrary();
+	}
+	
+	@Test
+	void testAddSongOverloaded() {
+		library.addAlbum(songSame1.getTitle(), musicStore, songSame1.getArtist());
+		library.addSong(songSame1, null, 0);
+		library.addSong(song2, null, 0);
+	}
+	
+	@Test
+	void testAddPlaylists() {
+		library.createPlaylist("Philly Disco");
+		library.addPlaylists(library.getPlaylists());
+	}
+	
+	@Test
+	void testGetUserPlaylists() {
+		library.getUserPlaylists();
+	}
+	
 }

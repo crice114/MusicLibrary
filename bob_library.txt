@@ -1,3 +1,0 @@
-Highway 61 Revisited - Bob Dylan | Highway 61 Revisited | 4 | true | 5
-Masters of War - Bob Dylan | The Freewheelin' Bob Dylan | 3 | false | 3
-Lay Lady Lay - Bob Dylan | Nashville Skyline | 5 | true | 7

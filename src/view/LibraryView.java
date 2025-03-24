@@ -18,7 +18,10 @@ package view;
 
 import model.*;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Scanner;
@@ -38,7 +41,7 @@ public class LibraryView {
         this.scanner = new Scanner(System.in);
     }
    
-    private boolean login() {
+    private boolean login() throws FileNotFoundException, IOException {
         System.out.println("\n🔐 Please log in to access your music library.");
 
         System.out.print("👤 Username: ");
@@ -59,12 +62,21 @@ public class LibraryView {
 
             // Load this user's saved library
             List<String> savedSongs = userManager.loadUserLibrary(username);
+            
             for (String songStr : savedSongs) {
             	Song loaded = Song.fromFileString(songStr);
+            	String genre = "";
+            	int year = 0;
             	if (loaded != null) {
-            	    model.addSong(loaded);
+            		for (Album a : musicStore.getAlbums()) {
+            			if (loaded.getAlbum().equals(a.getTitle())) {
+            				genre = a.getGenre();
+            				year = a.getYearReleased();
+            				break;
+            			}
+            		}
+            	    model.addSong(loaded, genre, year);
             	}
-            	
             }
             
        	 // 🔽 Load user's saved playlists
@@ -79,24 +91,48 @@ public class LibraryView {
         }
     }
 
-    
-    
-    
-    
-    private void createUser() {
+    private void createUser() throws FileNotFoundException, IOException, NoSuchAlgorithmException, InvalidKeySpecException {
         System.out.println("\n🔑 Create a new user account:");
 
-        System.out.print("👤 Enter username: ");
-        String username = scanner.nextLine().trim();
-
+        String username = null;
         UserManager userManager = new UserManager();
-        if (userManager.userExists(username)) {
-            System.out.println("\n❌ Username already taken. Please choose another.");
-            return;
+		while (username == null) {
+            System.out.print("👤 Enter username (4-20 characters, no spaces): ");
+            username = scanner.nextLine().trim();
+
+            // Username validation: must be between 4 and 20 characters and no spaces
+            if (username.isEmpty()) {
+                System.out.println("❌ Username cannot be empty.");
+                username = null;
+            } else if (username.length() < 4 || username.length() > 20) {
+                System.out.println("❌ Username must be between 4 and 20 characters.");
+                username = null;
+            } else if (userManager.userExists(username)) {
+                System.out.println("\n❌ Username already taken. Please choose another.");
+                username = null;
+            } else if (username.contains(" ")) {
+                System.out.println("❌ Username cannot contain spaces.");
+                username = null;
+            }
         }
 
-        System.out.print("🔑 Enter password: ");
-        String password = scanner.nextLine().trim();
+        String password = null;
+        while (password == null) {
+            System.out.print("🔑 Enter password (min 8 characters): ");
+            password = scanner.nextLine().trim();
+
+            // Password validation: must be at least 8 characters long
+            if (password.isEmpty()) {
+                System.out.println("❌ Password cannot be empty.");
+                password = null;
+            } else if (password.length() < 8) {
+                System.out.println("❌ Password must be at least 8 characters.");
+                password = null;
+            } else if (!password.matches(".*[A-Za-z].*") || !password.matches(".*\\d.*")) {
+                System.out.println("❌ Password must contain both letters and numbers.");
+                password = null;
+            }
+        }
 
         // Register user using UserManager (handles salting + hashing + file write)
         boolean success = userManager.registerUser(username, password);
@@ -115,7 +151,7 @@ public class LibraryView {
 
 
 
-    private void logout() {
+    private void logout() throws IOException {
         if (currentUser != null) {
             UserManager userManager = new UserManager();
             List<String> songStrings = model.getSongs().stream()
@@ -137,7 +173,7 @@ public class LibraryView {
 
     /////////////////////////////////////////////////////////////////////////
     // MENU OPTION
-    public void start() {
+    public void start() throws FileNotFoundException, IOException, NoSuchAlgorithmException, InvalidKeySpecException {
         boolean loggedIn = false;
 
         // Prompt user to log in first or create a new account
@@ -255,7 +291,7 @@ public class LibraryView {
 
             // After logging out, loop back to the login screen
             if (!loggedIn) {
-                System.out.println("\nYou will be logged out. Please log in again.");
+                System.out.println("\nPlease log in again.");
                 start(); // Restart the login process
             }
         }
@@ -284,11 +320,6 @@ public class LibraryView {
                     } else {
                         for (Album album : albums) {
                         	boolean inLibrary = model.albumInLibrary(album); // Check if in user library
-                        	/*System.out.println("\n📀 Album: " + album.getTitle());
-                            System.out.println("   🎤 Artist: " + album.getArtist());
-                            System.out.println("   🎵 Genre: " + album.getGenre());
-                            System.out.println("   📅 Release Year: " + album.getYearReleased());
-                            System.out.println("   🎶 Songs: " + album.getSongs());*/
                         	System.out.println(album.toString());
                             System.out.println("   📚 In Your Library: " + (inLibrary ? "✅ Yes" : "❌ No"));
                         }
@@ -439,11 +470,7 @@ public class LibraryView {
                     } else {
                         for (Album album : albums) {
                         	boolean inLibrary = model.albumInLibrary(album); // Check if in user library
-                        	System.out.println("\n📀 Album: " + album.getTitle());
-                            System.out.println("   🎤 Artist: " + album.getArtist());
-                            System.out.println("   🎵 Genre: " + album.getGenre());
-                            System.out.println("   📅 Release Year: " + album.getYearReleased());
-                            System.out.println("   🎶 Songs: " + album.getSongs());
+                        	System.out.println(album.toString());
                             System.out.println("   📚 In Your Library: " + (inLibrary ? "✅ Yes" : "❌ No"));
                         }
                     }
@@ -774,7 +801,7 @@ public class LibraryView {
 
 
     // MAIN
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {
         LibraryModel model = new LibraryModel();
         MusicStore musicStore = new MusicStore();
         musicStore.loadAlbums();
