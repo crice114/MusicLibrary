@@ -20,8 +20,8 @@ public class UserManagerTest {
     @BeforeEach
     void setup() {
         userManager = new UserManager();
-        new File("users.txt").delete();
-        new File("bobdylan_library.txt").delete();
+        new File("data/users.txt").delete();
+        new File("data/bobdylan_library.txt").delete();
     }
 
     @Test
